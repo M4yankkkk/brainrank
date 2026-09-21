@@ -1,0 +1,40 @@
+# Supabase local dev config. Only Postgres, Auth, and Storage are used - all
+# application logic lives in apps/api (see /apps/api/README.md).
+project_id = "brainrank"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000/auth/callback"]
+jwt_expiry = 3600
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+enable_confirmations = false
+# Magic link sign-in (PRD 9.1 "sign in with Google or phone OTP" -> web MVP uses email magic link + Google).
+enable_password_authentication = false
+
+[auth.external.google]
+enabled = true
+client_id = "env(SUPABASE_AUTH_GOOGLE_CLIENT_ID)"
+secret = "env(SUPABASE_AUTH_GOOGLE_SECRET)"
+
+[storage]
+enabled = true
+file_size_limit = "5MiB"

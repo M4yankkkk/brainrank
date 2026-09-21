@@ -1,0 +1,222 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Brainrank API",
+    "description": "All Brainrank business logic: move-log replay and scoring via @brainrank/engine, groups, seasons, leaderboards. Supabase provides only Postgres/Auth/Storage; clients authenticate with Supabase and send the resulting access token as a Bearer token to every route here.",
+    "version": "0.1.0"
+  },
+  "components": {
+    "securitySchemes": {
+      "supabaseAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {}
+  },
+  "paths": {
+    "/puzzles/today": {
+      "get": {
+        "summary": "Today's 3-puzzle set (PRD 6.1) for the caller's local date, with their attempt status.",
+        "tags": [
+          "puzzles"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "in": "query",
+            "name": "date",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/puzzles/{id}": {
+      "get": {
+        "summary": "A single puzzle plus the caller's attempt status.",
+        "tags": [
+          "puzzles"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/puzzles/{id}/attempts": {
+      "post": {
+        "summary": "Submit a completed (or abandoned) attempt. The server replays the move log against the stored puzzle and computes the final score itself - the client's local score is never trusted (PRD 13.4).",
+        "tags": [
+          "attempts"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/groups": {
+      "post": {
+        "summary": "Create a group (PRD 6.4); the caller becomes its owner.",
+        "tags": [
+          "groups"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "get": {
+        "summary": "Groups the caller is an active member of.",
+        "tags": [
+          "groups"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/groups/join": {
+      "post": {
+        "summary": "Join a group by its 6-character invite code.",
+        "tags": [
+          "groups"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/groups/{id}": {
+      "get": {
+        "summary": "Group detail: members, today's leaderboard, and the current season's standings.",
+        "tags": [
+          "groups"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/groups/{id}/members/{userId}": {
+      "delete": {
+        "summary": "Owner removes a member (PRD 6.4).",
+        "tags": [
+          "groups"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "userId",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/storage/avatar-upload-url": {
+      "post": {
+        "summary": "Issue a short-lived signed upload URL for the caller's own avatar. Clients never hold the service role key.",
+        "tags": [
+          "storage"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/internal/cron/daily-rollover": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/internal/cron/season-end": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "security": [
+    {
+      "supabaseAuth": []
+    }
+  ]
+}
