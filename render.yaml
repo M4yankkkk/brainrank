@@ -2,7 +2,7 @@ services:
   - type: web
     name: brainrank-api
     runtime: node
-    plan: starter
+    plan: free
     rootDir: apps/api
     buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @brainrank/engine build && pnpm build
     startCommand: pnpm start
@@ -21,34 +21,4 @@ services:
       - key: CRON_SECRET
         sync: false
       - key: WEB_ORIGIN
-        sync: false
-
-  - type: cron
-    name: brainrank-daily-rollover
-    runtime: docker
-    plan: starter
-    # 00:15 UTC daily - after most players' local midnight has passed.
-    schedule: "15 0 * * *"
-    dockerCommand: >
-      curl -sf -X POST "$API_URL/internal/cron/daily-rollover"
-      -H "x-cron-secret: $CRON_SECRET" -H "content-type: application/json" -d '{}'
-    envVars:
-      - key: API_URL
-        value: https://brainrank-api.onrender.com
-      - key: CRON_SECRET
-        sync: false
-
-  - type: cron
-    name: brainrank-season-end
-    runtime: docker
-    plan: starter
-    # 00:30 UTC daily - after the rollover above.
-    schedule: "30 0 * * *"
-    dockerCommand: >
-      curl -sf -X POST "$API_URL/internal/cron/season-end"
-      -H "x-cron-secret: $CRON_SECRET" -H "content-type: application/json" -d '{}'
-    envVars:
-      - key: API_URL
-        value: https://brainrank-api.onrender.com
-      - key: CRON_SECRET
         sync: false

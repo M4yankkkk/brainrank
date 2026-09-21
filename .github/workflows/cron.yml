@@ -1,0 +1,35 @@
+name: Daily Cron Tasks
+
+on:
+  schedule:
+    # 00:15 UTC daily - daily rollover
+    - cron: "15 0 * * *"
+    # 00:30 UTC daily - season end
+    - cron: "30 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  run-cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Brainrank Internal Crons
+        env:
+          API_URL: ${{ secrets.API_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$API_URL" ] || [ -z "$CRON_SECRET" ]; then
+            echo "API_URL or CRON_SECRET secrets are missing. Configure them in Repository Settings -> Secrets and variables -> Actions."
+            exit 1
+          fi
+
+          echo "Pinging daily rollover..."
+          curl -sf -X POST "$API_URL/internal/cron/daily-rollover" \
+            -H "x-cron-secret: $CRON_SECRET" \
+            -H "content-type: application/json" \
+            -d '{}'
+
+          echo "Pinging season end..."
+          curl -sf -X POST "$API_URL/internal/cron/season-end" \
+            -H "x-cron-secret: $CRON_SECRET" \
+            -H "content-type: application/json" \
+            -d '{}'
