@@ -12,16 +12,16 @@ import { SubmitErrorScreen } from "./SubmitErrorScreen";
 import { StarIcon, CloseIcon } from "../Icons";
 
 const REGION_PALETTE = [
-  "#7E62F0", // 0: Violet
-  "#F59E0B", // 1: Amber
-  "#0D9488", // 2: Teal
-  "#E11D48", // 3: Rose
-  "#10B981", // 4: Emerald
-  "#2563EB", // 5: Cobalt Blue
-  "#FF7F36", // 6: Warm Orange
-  "#9333EA", // 7: Deep Purple
-  "#0284C7", // 8: Sky Blue
-  "#C026D3"  // 9: Fuchsia
+  "#A78BFA", // 0: Medium Pastel Lilac / Violet
+  "#FB923C", // 1: Medium Pastel Apricot / Orange
+  "#2DD4BF", // 2: Medium Pastel Aqua / Teal
+  "#FB7185", // 3: Medium Pastel Coral / Rose
+  "#34D399", // 4: Medium Pastel Mint / Emerald
+  "#FBBF24", // 5: Medium Pastel Honey / Amber
+  "#38BDF8", // 6: Medium Pastel Sky / Azure
+  "#C084FC", // 7: Medium Pastel Orchid / Purple
+  "#A3E635", // 8: Medium Pastel Celery / Lime
+  "#818CF8"  // 9: Medium Pastel Royal / Periwinkle
 ];
 
 function nextMark(mark: CellMark): CellMark {
@@ -120,10 +120,10 @@ export function StarfieldPuzzle() {
               aria-label={`Row ${r + 1}, column ${c + 1}, ${mark}`}
             >
               {mark === "star" && (
-                <StarIcon className="h-6 w-6 text-white fill-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]" />
+                <StarIcon className="h-6 w-6 text-white fill-white drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.4)]" />
               )}
               {mark === "x" && (
-                <CloseIcon className="h-4 w-4 text-white/80 drop-shadow-[0_1px_1px_rgba(0,0,0,0.3)]" />
+                <CloseIcon className="h-4 w-4 text-white/90 drop-shadow-[0_1px_1.5px_rgba(0,0,0,0.35)] stroke-[2.5]" />
               )}
             </button>
           ))

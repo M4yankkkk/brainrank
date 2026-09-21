@@ -16,7 +16,7 @@ export function StarfieldThumb() {
       {SF_REGIONS.map((region, i) => (
         <i key={i} className={`r${region}`}>
           {SF_STARS.has(i) ? (
-            <StarIcon className="h-2.5 w-2.5 text-white fill-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)]" />
+            <StarIcon className="h-2.5 w-2.5 text-white fill-white drop-shadow-[0_0.5px_1px_rgba(0,0,0,0.45)]" />
           ) : null}
         </i>
       ))}
