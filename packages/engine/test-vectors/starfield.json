@@ -1,0 +1,888 @@
+[
+  {
+    "name": "sf-perfect-fast",
+    "description": "4x4, solved directly with no mistakes, at t_fast",
+    "payload": {
+      "size": 4,
+      "regions": [
+        [
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          2,
+          0,
+          1,
+          1
+        ],
+        [
+          2,
+          2,
+          3,
+          1
+        ],
+        [
+          2,
+          3,
+          3,
+          3
+        ]
+      ]
+    },
+    "moves": [
+      {
+        "type": "setMark",
+        "row": 0,
+        "col": 1,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 1,
+        "col": 3,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 2,
+        "col": 0,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 3,
+        "col": 2,
+        "mark": "star"
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 30000,
+    "tFastMs": 30000,
+    "tSlowMs": 90000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "wrongStars": 0
+      },
+      "efficiency": 1,
+      "time": 1,
+      "hintPenalty": 0,
+      "points": 100
+    }
+  },
+  {
+    "name": "sf-perfect-slow",
+    "description": "4x4, solved directly with no mistakes, at t_slow",
+    "payload": {
+      "size": 4,
+      "regions": [
+        [
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          2,
+          0,
+          1,
+          1
+        ],
+        [
+          2,
+          2,
+          3,
+          1
+        ],
+        [
+          2,
+          3,
+          3,
+          3
+        ]
+      ]
+    },
+    "moves": [
+      {
+        "type": "setMark",
+        "row": 0,
+        "col": 1,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 1,
+        "col": 3,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 2,
+        "col": 0,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 3,
+        "col": 2,
+        "mark": "star"
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 90000,
+    "tFastMs": 30000,
+    "tSlowMs": 90000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "wrongStars": 0
+      },
+      "efficiency": 1,
+      "time": 0,
+      "hintPenalty": 0,
+      "points": 30
+    }
+  },
+  {
+    "name": "sf-perfect-mid",
+    "description": "4x4, solved directly with no mistakes, halfway between t_fast and t_slow",
+    "payload": {
+      "size": 4,
+      "regions": [
+        [
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          2,
+          0,
+          1,
+          1
+        ],
+        [
+          2,
+          2,
+          3,
+          1
+        ],
+        [
+          2,
+          3,
+          3,
+          3
+        ]
+      ]
+    },
+    "moves": [
+      {
+        "type": "setMark",
+        "row": 0,
+        "col": 1,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 1,
+        "col": 3,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 2,
+        "col": 0,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 3,
+        "col": 2,
+        "mark": "star"
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 60000,
+    "tFastMs": 30000,
+    "tSlowMs": 90000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "wrongStars": 0
+      },
+      "efficiency": 1,
+      "time": 0.5,
+      "hintPenalty": 0,
+      "points": 65
+    }
+  },
+  {
+    "name": "sf-one-wrong-star",
+    "description": "4x4, one conflicting star placed and cleared before solving",
+    "payload": {
+      "size": 4,
+      "regions": [
+        [
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          2,
+          0,
+          1,
+          1
+        ],
+        [
+          2,
+          2,
+          3,
+          1
+        ],
+        [
+          2,
+          3,
+          3,
+          3
+        ]
+      ]
+    },
+    "moves": [
+      {
+        "type": "setMark",
+        "row": 0,
+        "col": 1,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 0,
+        "col": 0,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 0,
+        "col": 0,
+        "mark": "empty"
+      },
+      {
+        "type": "setMark",
+        "row": 1,
+        "col": 3,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 2,
+        "col": 0,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 3,
+        "col": 2,
+        "mark": "star"
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 45000,
+    "tFastMs": 30000,
+    "tSlowMs": 90000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "wrongStars": 1
+      },
+      "efficiency": 0.75,
+      "time": 0.75,
+      "hintPenalty": 0,
+      "points": 75
+    }
+  },
+  {
+    "name": "sf-two-wrong-stars",
+    "description": "4x4, two conflicting stars placed and cleared before solving",
+    "payload": {
+      "size": 4,
+      "regions": [
+        [
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          2,
+          0,
+          1,
+          1
+        ],
+        [
+          2,
+          2,
+          3,
+          1
+        ],
+        [
+          2,
+          3,
+          3,
+          3
+        ]
+      ]
+    },
+    "moves": [
+      {
+        "type": "setMark",
+        "row": 0,
+        "col": 1,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 1,
+        "col": 1,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 1,
+        "col": 1,
+        "mark": "empty"
+      },
+      {
+        "type": "setMark",
+        "row": 1,
+        "col": 3,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 2,
+        "col": 3,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 2,
+        "col": 3,
+        "mark": "empty"
+      },
+      {
+        "type": "setMark",
+        "row": 2,
+        "col": 0,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 3,
+        "col": 2,
+        "mark": "star"
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 40000,
+    "tFastMs": 30000,
+    "tSlowMs": 90000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "wrongStars": 2
+      },
+      "efficiency": 0.5,
+      "time": 0.8333333333333334,
+      "hintPenalty": 0,
+      "points": 73
+    }
+  },
+  {
+    "name": "sf-four-wrong-stars-floor",
+    "description": "4x4, four conflicting placements: efficiency clamps to 0 but the 10-point solve floor still applies",
+    "payload": {
+      "size": 4,
+      "regions": [
+        [
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          2,
+          0,
+          1,
+          1
+        ],
+        [
+          2,
+          2,
+          3,
+          1
+        ],
+        [
+          2,
+          3,
+          3,
+          3
+        ]
+      ]
+    },
+    "moves": [
+      {
+        "type": "setMark",
+        "row": 0,
+        "col": 1,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 0,
+        "col": 2,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 0,
+        "col": 2,
+        "mark": "empty"
+      },
+      {
+        "type": "setMark",
+        "row": 0,
+        "col": 3,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 0,
+        "col": 3,
+        "mark": "empty"
+      },
+      {
+        "type": "setMark",
+        "row": 1,
+        "col": 1,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 1,
+        "col": 1,
+        "mark": "empty"
+      },
+      {
+        "type": "setMark",
+        "row": 1,
+        "col": 3,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 2,
+        "col": 3,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 2,
+        "col": 3,
+        "mark": "empty"
+      },
+      {
+        "type": "setMark",
+        "row": 2,
+        "col": 0,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 3,
+        "col": 2,
+        "mark": "star"
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 90000,
+    "tFastMs": 30000,
+    "tSlowMs": 90000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "wrongStars": 4
+      },
+      "efficiency": 0,
+      "time": 0,
+      "hintPenalty": 0,
+      "points": 10
+    }
+  },
+  {
+    "name": "sf-all-hints",
+    "description": "4x4, solved entirely by following hints (tests the 15pt/hint penalty and the solve floor)",
+    "payload": {
+      "size": 4,
+      "regions": [
+        [
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          2,
+          0,
+          1,
+          1
+        ],
+        [
+          2,
+          2,
+          3,
+          1
+        ],
+        [
+          2,
+          3,
+          3,
+          3
+        ]
+      ]
+    },
+    "moves": [
+      {
+        "type": "setMark",
+        "row": 0,
+        "col": 1,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 1,
+        "col": 3,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 2,
+        "col": 0,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 3,
+        "col": 2,
+        "mark": "star"
+      }
+    ],
+    "hintsUsed": 4,
+    "solveTimeMs": 30000,
+    "tFastMs": 30000,
+    "tSlowMs": 90000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "wrongStars": 0
+      },
+      "efficiency": 1,
+      "time": 1,
+      "hintPenalty": 60,
+      "points": 40
+    }
+  },
+  {
+    "name": "sf-unsolved",
+    "description": "4x4, abandoned after 2 of 4 stars placed",
+    "payload": {
+      "size": 4,
+      "regions": [
+        [
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          2,
+          0,
+          1,
+          1
+        ],
+        [
+          2,
+          2,
+          3,
+          1
+        ],
+        [
+          2,
+          3,
+          3,
+          3
+        ]
+      ]
+    },
+    "moves": [
+      {
+        "type": "setMark",
+        "row": 0,
+        "col": 1,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 1,
+        "col": 3,
+        "mark": "star"
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 20000,
+    "tFastMs": 30000,
+    "tSlowMs": 90000,
+    "expected": {
+      "solved": false,
+      "result": {
+        "wrongStars": 0
+      },
+      "efficiency": 1,
+      "time": 1,
+      "hintPenalty": 0,
+      "points": 0
+    }
+  },
+  {
+    "name": "sf-6x6-perfect",
+    "description": "6x6, solved directly with no mistakes",
+    "payload": {
+      "size": 6,
+      "regions": [
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          2
+        ],
+        [
+          0,
+          0,
+          1,
+          1,
+          1,
+          2
+        ],
+        [
+          3,
+          0,
+          1,
+          1,
+          2,
+          2
+        ],
+        [
+          3,
+          3,
+          4,
+          1,
+          2,
+          2
+        ],
+        [
+          3,
+          4,
+          4,
+          4,
+          5,
+          2
+        ],
+        [
+          3,
+          4,
+          4,
+          5,
+          5,
+          5
+        ]
+      ]
+    },
+    "moves": [
+      {
+        "type": "setMark",
+        "row": 0,
+        "col": 1,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 1,
+        "col": 3,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 2,
+        "col": 5,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 3,
+        "col": 0,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 4,
+        "col": 2,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 5,
+        "col": 4,
+        "mark": "star"
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 50000,
+    "tFastMs": 40000,
+    "tSlowMs": 150000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "wrongStars": 0
+      },
+      "efficiency": 1,
+      "time": 0.9090909090909091,
+      "hintPenalty": 0,
+      "points": 94
+    }
+  },
+  {
+    "name": "sf-6x6-hint-and-mistake",
+    "description": "6x6, one hint used plus one wrong star before solving",
+    "payload": {
+      "size": 6,
+      "regions": [
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          2
+        ],
+        [
+          0,
+          0,
+          1,
+          1,
+          1,
+          2
+        ],
+        [
+          3,
+          0,
+          1,
+          1,
+          2,
+          2
+        ],
+        [
+          3,
+          3,
+          4,
+          1,
+          2,
+          2
+        ],
+        [
+          3,
+          4,
+          4,
+          4,
+          5,
+          2
+        ],
+        [
+          3,
+          4,
+          4,
+          5,
+          5,
+          5
+        ]
+      ]
+    },
+    "moves": [
+      {
+        "type": "setMark",
+        "row": 0,
+        "col": 0,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 0,
+        "col": 1,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 0,
+        "col": 1,
+        "mark": "empty"
+      },
+      {
+        "type": "setMark",
+        "row": 1,
+        "col": 2,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 2,
+        "col": 4,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 3,
+        "col": 1,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 4,
+        "col": 3,
+        "mark": "star"
+      },
+      {
+        "type": "setMark",
+        "row": 5,
+        "col": 5,
+        "mark": "star"
+      }
+    ],
+    "hintsUsed": 1,
+    "solveTimeMs": 70000,
+    "tFastMs": 40000,
+    "tSlowMs": 150000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "wrongStars": 1
+      },
+      "efficiency": 0.75,
+      "time": 0.7272727272727273,
+      "hintPenalty": 15,
+      "points": 58
+    }
+  }
+]

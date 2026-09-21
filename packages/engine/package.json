@@ -1,0 +1,25 @@
+{
+  "name": "@brainrank/engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "build": "tsup src/index.ts --format esm --dts --out-dir dist",
+    "gen-vectors": "tsx scripts/gen-vectors.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2"
+  }
+}

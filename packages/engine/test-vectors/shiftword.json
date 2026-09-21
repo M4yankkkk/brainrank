@@ -1,0 +1,966 @@
+[
+  {
+    "name": "sw-3x3-par-fast",
+    "description": "3x3, solved in exactly par moves (inverse of the scramble), at t_fast",
+    "payload": {
+      "size": 3,
+      "grid": [
+        [
+          "A",
+          "T",
+          "O"
+        ],
+        [
+          "G",
+          "D",
+          "G"
+        ],
+        [
+          "P",
+          "I",
+          "C"
+        ]
+      ],
+      "par": 3,
+      "dictionary": [
+        "CAT",
+        "DOG",
+        "PIG",
+        "BAT",
+        "RAT",
+        "LOG",
+        "JOG",
+        "BIG",
+        "FIG",
+        "COT"
+      ],
+      "solutionGrid": [
+        [
+          "C",
+          "A",
+          "T"
+        ],
+        [
+          "D",
+          "O",
+          "G"
+        ],
+        [
+          "P",
+          "I",
+          "G"
+        ]
+      ]
+    },
+    "moves": [
+      {
+        "type": "shiftCol",
+        "col": 2,
+        "dir": "down"
+      },
+      {
+        "type": "shiftRow",
+        "row": 1,
+        "dir": "left"
+      },
+      {
+        "type": "shiftRow",
+        "row": 0,
+        "dir": "right"
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 15000,
+    "tFastMs": 15000,
+    "tSlowMs": 60000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "par": 3,
+        "moves": 3
+      },
+      "efficiency": 1,
+      "time": 1,
+      "hintPenalty": 0,
+      "points": 100
+    }
+  },
+  {
+    "name": "sw-3x3-par-slow",
+    "description": "3x3, solved in exactly par moves, at t_slow",
+    "payload": {
+      "size": 3,
+      "grid": [
+        [
+          "A",
+          "T",
+          "O"
+        ],
+        [
+          "G",
+          "D",
+          "G"
+        ],
+        [
+          "P",
+          "I",
+          "C"
+        ]
+      ],
+      "par": 3,
+      "dictionary": [
+        "CAT",
+        "DOG",
+        "PIG",
+        "BAT",
+        "RAT",
+        "LOG",
+        "JOG",
+        "BIG",
+        "FIG",
+        "COT"
+      ],
+      "solutionGrid": [
+        [
+          "C",
+          "A",
+          "T"
+        ],
+        [
+          "D",
+          "O",
+          "G"
+        ],
+        [
+          "P",
+          "I",
+          "G"
+        ]
+      ]
+    },
+    "moves": [
+      {
+        "type": "shiftCol",
+        "col": 2,
+        "dir": "down"
+      },
+      {
+        "type": "shiftRow",
+        "row": 1,
+        "dir": "left"
+      },
+      {
+        "type": "shiftRow",
+        "row": 0,
+        "dir": "right"
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 60000,
+    "tFastMs": 15000,
+    "tSlowMs": 60000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "par": 3,
+        "moves": 3
+      },
+      "efficiency": 1,
+      "time": 0,
+      "hintPenalty": 0,
+      "points": 60
+    }
+  },
+  {
+    "name": "sw-3x3-over-par",
+    "description": "3x3, two redundant extra shifts before solving (moves > par)",
+    "payload": {
+      "size": 3,
+      "grid": [
+        [
+          "A",
+          "T",
+          "O"
+        ],
+        [
+          "G",
+          "D",
+          "G"
+        ],
+        [
+          "P",
+          "I",
+          "C"
+        ]
+      ],
+      "par": 3,
+      "dictionary": [
+        "CAT",
+        "DOG",
+        "PIG",
+        "BAT",
+        "RAT",
+        "LOG",
+        "JOG",
+        "BIG",
+        "FIG",
+        "COT"
+      ],
+      "solutionGrid": [
+        [
+          "C",
+          "A",
+          "T"
+        ],
+        [
+          "D",
+          "O",
+          "G"
+        ],
+        [
+          "P",
+          "I",
+          "G"
+        ]
+      ]
+    },
+    "moves": [
+      {
+        "type": "shiftRow",
+        "row": 2,
+        "dir": "left"
+      },
+      {
+        "type": "shiftRow",
+        "row": 2,
+        "dir": "right"
+      },
+      {
+        "type": "shiftCol",
+        "col": 2,
+        "dir": "down"
+      },
+      {
+        "type": "shiftRow",
+        "row": 1,
+        "dir": "left"
+      },
+      {
+        "type": "shiftRow",
+        "row": 0,
+        "dir": "right"
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 25000,
+    "tFastMs": 15000,
+    "tSlowMs": 60000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "par": 3,
+        "moves": 5
+      },
+      "efficiency": 0.6,
+      "time": 0.7777777777777778,
+      "hintPenalty": 0,
+      "points": 67
+    }
+  },
+  {
+    "name": "sw-3x3-all-hints",
+    "description": "3x3, one hint used, then finished manually",
+    "payload": {
+      "size": 3,
+      "grid": [
+        [
+          "A",
+          "T",
+          "O"
+        ],
+        [
+          "G",
+          "D",
+          "G"
+        ],
+        [
+          "P",
+          "I",
+          "C"
+        ]
+      ],
+      "par": 3,
+      "dictionary": [
+        "CAT",
+        "DOG",
+        "PIG",
+        "BAT",
+        "RAT",
+        "LOG",
+        "JOG",
+        "BIG",
+        "FIG",
+        "COT"
+      ],
+      "solutionGrid": [
+        [
+          "C",
+          "A",
+          "T"
+        ],
+        [
+          "D",
+          "O",
+          "G"
+        ],
+        [
+          "P",
+          "I",
+          "G"
+        ]
+      ]
+    },
+    "moves": [
+      {
+        "type": "shiftRow",
+        "row": 0,
+        "dir": "right"
+      },
+      {
+        "type": "shiftRow",
+        "row": 0,
+        "dir": "left"
+      },
+      {
+        "type": "shiftCol",
+        "col": 2,
+        "dir": "down"
+      },
+      {
+        "type": "shiftRow",
+        "row": 0,
+        "dir": "right"
+      },
+      {
+        "type": "shiftRow",
+        "row": 1,
+        "dir": "left"
+      }
+    ],
+    "hintsUsed": 1,
+    "solveTimeMs": 15000,
+    "tFastMs": 15000,
+    "tSlowMs": 60000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "par": 3,
+        "moves": 5
+      },
+      "efficiency": 0.6,
+      "time": 1,
+      "hintPenalty": 15,
+      "points": 61
+    }
+  },
+  {
+    "name": "sw-3x3-unsolved",
+    "description": "3x3, abandoned after a single shift",
+    "payload": {
+      "size": 3,
+      "grid": [
+        [
+          "A",
+          "T",
+          "O"
+        ],
+        [
+          "G",
+          "D",
+          "G"
+        ],
+        [
+          "P",
+          "I",
+          "C"
+        ]
+      ],
+      "par": 3,
+      "dictionary": [
+        "CAT",
+        "DOG",
+        "PIG",
+        "BAT",
+        "RAT",
+        "LOG",
+        "JOG",
+        "BIG",
+        "FIG",
+        "COT"
+      ],
+      "solutionGrid": [
+        [
+          "C",
+          "A",
+          "T"
+        ],
+        [
+          "D",
+          "O",
+          "G"
+        ],
+        [
+          "P",
+          "I",
+          "G"
+        ]
+      ]
+    },
+    "moves": [
+      {
+        "type": "shiftCol",
+        "col": 2,
+        "dir": "down"
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 10000,
+    "tFastMs": 15000,
+    "tSlowMs": 60000,
+    "expected": {
+      "solved": false,
+      "result": {
+        "par": 3,
+        "moves": 1
+      },
+      "efficiency": 1,
+      "time": 1,
+      "hintPenalty": 0,
+      "points": 0
+    }
+  },
+  {
+    "name": "sw-3x3-any-valid-arrangement",
+    "description": "3x3, isSolved() accepts any arrangement whose rows are all dictionary words, not only the generator's intended one",
+    "payload": {
+      "size": 3,
+      "grid": [
+        [
+          "A",
+          "T",
+          "O"
+        ],
+        [
+          "G",
+          "D",
+          "G"
+        ],
+        [
+          "P",
+          "I",
+          "C"
+        ]
+      ],
+      "par": 3,
+      "dictionary": [
+        "CAT",
+        "DOG",
+        "PIG",
+        "BAT",
+        "RAT",
+        "LOG",
+        "JOG",
+        "BIG",
+        "FIG",
+        "COT"
+      ],
+      "solutionGrid": [
+        [
+          "C",
+          "A",
+          "T"
+        ],
+        [
+          "D",
+          "O",
+          "G"
+        ],
+        [
+          "P",
+          "I",
+          "G"
+        ]
+      ]
+    },
+    "moves": [
+      {
+        "type": "shiftCol",
+        "col": 2,
+        "dir": "down"
+      },
+      {
+        "type": "shiftRow",
+        "row": 1,
+        "dir": "left"
+      },
+      {
+        "type": "shiftRow",
+        "row": 0,
+        "dir": "right"
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 20000,
+    "tFastMs": 15000,
+    "tSlowMs": 60000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "par": 3,
+        "moves": 3
+      },
+      "efficiency": 1,
+      "time": 0.8888888888888888,
+      "hintPenalty": 0,
+      "points": 96
+    }
+  },
+  {
+    "name": "sw-4x4-par",
+    "description": "4x4, solved in exactly par moves",
+    "payload": {
+      "size": 4,
+      "grid": [
+        [
+          "E",
+          "O",
+          "O",
+          "E"
+        ],
+        [
+          "L",
+          "R",
+          "K",
+          "E"
+        ],
+        [
+          "T",
+          "A",
+          "M",
+          "W"
+        ],
+        [
+          "I",
+          "R",
+          "D",
+          "S"
+        ]
+      ],
+      "par": 4,
+      "dictionary": [
+        "ROSE",
+        "LAKE",
+        "TIME",
+        "WORD",
+        "GOLD",
+        "MILK",
+        "SAND",
+        "RAIN"
+      ],
+      "solutionGrid": [
+        [
+          "R",
+          "O",
+          "S",
+          "E"
+        ],
+        [
+          "L",
+          "A",
+          "K",
+          "E"
+        ],
+        [
+          "T",
+          "I",
+          "M",
+          "E"
+        ],
+        [
+          "W",
+          "O",
+          "R",
+          "D"
+        ]
+      ]
+    },
+    "moves": [
+      {
+        "type": "shiftCol",
+        "col": 3,
+        "dir": "down"
+      },
+      {
+        "type": "shiftRow",
+        "row": 3,
+        "dir": "right"
+      },
+      {
+        "type": "shiftCol",
+        "col": 1,
+        "dir": "up"
+      },
+      {
+        "type": "shiftRow",
+        "row": 0,
+        "dir": "left"
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 40000,
+    "tFastMs": 20000,
+    "tSlowMs": 90000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "par": 4,
+        "moves": 4
+      },
+      "efficiency": 1,
+      "time": 0.7142857142857143,
+      "hintPenalty": 0,
+      "points": 89
+    }
+  },
+  {
+    "name": "sw-4x4-over-par",
+    "description": "4x4, one redundant shift pair before solving",
+    "payload": {
+      "size": 4,
+      "grid": [
+        [
+          "E",
+          "O",
+          "O",
+          "E"
+        ],
+        [
+          "L",
+          "R",
+          "K",
+          "E"
+        ],
+        [
+          "T",
+          "A",
+          "M",
+          "W"
+        ],
+        [
+          "I",
+          "R",
+          "D",
+          "S"
+        ]
+      ],
+      "par": 4,
+      "dictionary": [
+        "ROSE",
+        "LAKE",
+        "TIME",
+        "WORD",
+        "GOLD",
+        "MILK",
+        "SAND",
+        "RAIN"
+      ],
+      "solutionGrid": [
+        [
+          "R",
+          "O",
+          "S",
+          "E"
+        ],
+        [
+          "L",
+          "A",
+          "K",
+          "E"
+        ],
+        [
+          "T",
+          "I",
+          "M",
+          "E"
+        ],
+        [
+          "W",
+          "O",
+          "R",
+          "D"
+        ]
+      ]
+    },
+    "moves": [
+      {
+        "type": "shiftCol",
+        "col": 0,
+        "dir": "up"
+      },
+      {
+        "type": "shiftCol",
+        "col": 0,
+        "dir": "down"
+      },
+      {
+        "type": "shiftCol",
+        "col": 3,
+        "dir": "down"
+      },
+      {
+        "type": "shiftRow",
+        "row": 3,
+        "dir": "right"
+      },
+      {
+        "type": "shiftCol",
+        "col": 1,
+        "dir": "up"
+      },
+      {
+        "type": "shiftRow",
+        "row": 0,
+        "dir": "left"
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 55000,
+    "tFastMs": 20000,
+    "tSlowMs": 90000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "par": 4,
+        "moves": 6
+      },
+      "efficiency": 0.6666666666666666,
+      "time": 0.5,
+      "hintPenalty": 0,
+      "points": 60
+    }
+  },
+  {
+    "name": "sw-4x4-two-hints",
+    "description": "4x4, two hints used, then finished manually",
+    "payload": {
+      "size": 4,
+      "grid": [
+        [
+          "E",
+          "O",
+          "O",
+          "E"
+        ],
+        [
+          "L",
+          "R",
+          "K",
+          "E"
+        ],
+        [
+          "T",
+          "A",
+          "M",
+          "W"
+        ],
+        [
+          "I",
+          "R",
+          "D",
+          "S"
+        ]
+      ],
+      "par": 4,
+      "dictionary": [
+        "ROSE",
+        "LAKE",
+        "TIME",
+        "WORD",
+        "GOLD",
+        "MILK",
+        "SAND",
+        "RAIN"
+      ],
+      "solutionGrid": [
+        [
+          "R",
+          "O",
+          "S",
+          "E"
+        ],
+        [
+          "L",
+          "A",
+          "K",
+          "E"
+        ],
+        [
+          "T",
+          "I",
+          "M",
+          "E"
+        ],
+        [
+          "W",
+          "O",
+          "R",
+          "D"
+        ]
+      ]
+    },
+    "moves": [
+      {
+        "type": "shiftRow",
+        "row": 3,
+        "dir": "right"
+      },
+      {
+        "type": "shiftCol",
+        "col": 1,
+        "dir": "up"
+      },
+      {
+        "type": "shiftRow",
+        "row": 3,
+        "dir": "left"
+      },
+      {
+        "type": "shiftCol",
+        "col": 3,
+        "dir": "down"
+      },
+      {
+        "type": "shiftRow",
+        "row": 0,
+        "dir": "left"
+      },
+      {
+        "type": "shiftRow",
+        "row": 3,
+        "dir": "right"
+      }
+    ],
+    "hintsUsed": 2,
+    "solveTimeMs": 35000,
+    "tFastMs": 20000,
+    "tSlowMs": 90000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "par": 4,
+        "moves": 6
+      },
+      "efficiency": 0.6666666666666666,
+      "time": 0.7857142857142857,
+      "hintPenalty": 30,
+      "points": 41
+    }
+  },
+  {
+    "name": "sw-4x4-unsolved",
+    "description": "4x4, abandoned after two shifts",
+    "payload": {
+      "size": 4,
+      "grid": [
+        [
+          "E",
+          "O",
+          "O",
+          "E"
+        ],
+        [
+          "L",
+          "R",
+          "K",
+          "E"
+        ],
+        [
+          "T",
+          "A",
+          "M",
+          "W"
+        ],
+        [
+          "I",
+          "R",
+          "D",
+          "S"
+        ]
+      ],
+      "par": 4,
+      "dictionary": [
+        "ROSE",
+        "LAKE",
+        "TIME",
+        "WORD",
+        "GOLD",
+        "MILK",
+        "SAND",
+        "RAIN"
+      ],
+      "solutionGrid": [
+        [
+          "R",
+          "O",
+          "S",
+          "E"
+        ],
+        [
+          "L",
+          "A",
+          "K",
+          "E"
+        ],
+        [
+          "T",
+          "I",
+          "M",
+          "E"
+        ],
+        [
+          "W",
+          "O",
+          "R",
+          "D"
+        ]
+      ]
+    },
+    "moves": [
+      {
+        "type": "shiftCol",
+        "col": 3,
+        "dir": "down"
+      },
+      {
+        "type": "shiftRow",
+        "row": 3,
+        "dir": "right"
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 20000,
+    "tFastMs": 20000,
+    "tSlowMs": 90000,
+    "expected": {
+      "solved": false,
+      "result": {
+        "par": 4,
+        "moves": 2
+      },
+      "efficiency": 1,
+      "time": 1,
+      "hintPenalty": 0,
+      "points": 0
+    }
+  }
+]

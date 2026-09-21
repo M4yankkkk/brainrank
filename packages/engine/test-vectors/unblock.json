@@ -1,0 +1,703 @@
+[
+  {
+    "name": "ub-a-minimal-fast",
+    "description": "6x6, solved in the minimal number of moves, at t_fast",
+    "payload": {
+      "size": 6,
+      "exitRow": 2,
+      "blocks": [
+        {
+          "id": "K",
+          "row": 2,
+          "col": 1,
+          "length": 2,
+          "orientation": "h",
+          "isKey": true
+        },
+        {
+          "id": "A",
+          "row": 1,
+          "col": 3,
+          "length": 2,
+          "orientation": "v"
+        },
+        {
+          "id": "E",
+          "row": 2,
+          "col": 4,
+          "length": 2,
+          "orientation": "v"
+        },
+        {
+          "id": "B",
+          "row": 4,
+          "col": 0,
+          "length": 3,
+          "orientation": "h"
+        },
+        {
+          "id": "C",
+          "row": 0,
+          "col": 5,
+          "length": 2,
+          "orientation": "v"
+        }
+      ],
+      "par": 3
+    },
+    "moves": [
+      {
+        "type": "slide",
+        "blockId": "A",
+        "to": 0
+      },
+      {
+        "type": "slide",
+        "blockId": "E",
+        "to": 0
+      },
+      {
+        "type": "slide",
+        "blockId": "K",
+        "to": 4
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 20000,
+    "tFastMs": 20000,
+    "tSlowMs": 80000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "par": 3,
+        "moves": 3
+      },
+      "efficiency": 1,
+      "time": 1,
+      "hintPenalty": 0,
+      "points": 100
+    }
+  },
+  {
+    "name": "ub-a-minimal-slow",
+    "description": "6x6, solved in the minimal number of moves, at t_slow",
+    "payload": {
+      "size": 6,
+      "exitRow": 2,
+      "blocks": [
+        {
+          "id": "K",
+          "row": 2,
+          "col": 1,
+          "length": 2,
+          "orientation": "h",
+          "isKey": true
+        },
+        {
+          "id": "A",
+          "row": 1,
+          "col": 3,
+          "length": 2,
+          "orientation": "v"
+        },
+        {
+          "id": "E",
+          "row": 2,
+          "col": 4,
+          "length": 2,
+          "orientation": "v"
+        },
+        {
+          "id": "B",
+          "row": 4,
+          "col": 0,
+          "length": 3,
+          "orientation": "h"
+        },
+        {
+          "id": "C",
+          "row": 0,
+          "col": 5,
+          "length": 2,
+          "orientation": "v"
+        }
+      ],
+      "par": 3
+    },
+    "moves": [
+      {
+        "type": "slide",
+        "blockId": "A",
+        "to": 0
+      },
+      {
+        "type": "slide",
+        "blockId": "E",
+        "to": 0
+      },
+      {
+        "type": "slide",
+        "blockId": "K",
+        "to": 4
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 80000,
+    "tFastMs": 20000,
+    "tSlowMs": 80000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "par": 3,
+        "moves": 3
+      },
+      "efficiency": 1,
+      "time": 0,
+      "hintPenalty": 0,
+      "points": 60
+    }
+  },
+  {
+    "name": "ub-a-over-par",
+    "description": "6x6, one redundant detour move pair before the minimal solving path",
+    "payload": {
+      "size": 6,
+      "exitRow": 2,
+      "blocks": [
+        {
+          "id": "K",
+          "row": 2,
+          "col": 1,
+          "length": 2,
+          "orientation": "h",
+          "isKey": true
+        },
+        {
+          "id": "A",
+          "row": 1,
+          "col": 3,
+          "length": 2,
+          "orientation": "v"
+        },
+        {
+          "id": "E",
+          "row": 2,
+          "col": 4,
+          "length": 2,
+          "orientation": "v"
+        },
+        {
+          "id": "B",
+          "row": 4,
+          "col": 0,
+          "length": 3,
+          "orientation": "h"
+        },
+        {
+          "id": "C",
+          "row": 0,
+          "col": 5,
+          "length": 2,
+          "orientation": "v"
+        }
+      ],
+      "par": 3
+    },
+    "moves": [
+      {
+        "type": "slide",
+        "blockId": "C",
+        "to": 1
+      },
+      {
+        "type": "slide",
+        "blockId": "C",
+        "to": 0
+      },
+      {
+        "type": "slide",
+        "blockId": "A",
+        "to": 0
+      },
+      {
+        "type": "slide",
+        "blockId": "E",
+        "to": 0
+      },
+      {
+        "type": "slide",
+        "blockId": "K",
+        "to": 4
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 45000,
+    "tFastMs": 20000,
+    "tSlowMs": 80000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "par": 3,
+        "moves": 5
+      },
+      "efficiency": 0.6,
+      "time": 0.5833333333333333,
+      "hintPenalty": 0,
+      "points": 59
+    }
+  },
+  {
+    "name": "ub-a-unsolved",
+    "description": "6x6, abandoned after a single slide",
+    "payload": {
+      "size": 6,
+      "exitRow": 2,
+      "blocks": [
+        {
+          "id": "K",
+          "row": 2,
+          "col": 1,
+          "length": 2,
+          "orientation": "h",
+          "isKey": true
+        },
+        {
+          "id": "A",
+          "row": 1,
+          "col": 3,
+          "length": 2,
+          "orientation": "v"
+        },
+        {
+          "id": "E",
+          "row": 2,
+          "col": 4,
+          "length": 2,
+          "orientation": "v"
+        },
+        {
+          "id": "B",
+          "row": 4,
+          "col": 0,
+          "length": 3,
+          "orientation": "h"
+        },
+        {
+          "id": "C",
+          "row": 0,
+          "col": 5,
+          "length": 2,
+          "orientation": "v"
+        }
+      ],
+      "par": 3
+    },
+    "moves": [
+      {
+        "type": "slide",
+        "blockId": "A",
+        "to": 0
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 15000,
+    "tFastMs": 20000,
+    "tSlowMs": 80000,
+    "expected": {
+      "solved": false,
+      "result": {
+        "par": 3,
+        "moves": 1
+      },
+      "efficiency": 1,
+      "time": 1,
+      "hintPenalty": 0,
+      "points": 0
+    }
+  },
+  {
+    "name": "ub-a-all-hints",
+    "description": "6x6, solved entirely by following hints",
+    "payload": {
+      "size": 6,
+      "exitRow": 2,
+      "blocks": [
+        {
+          "id": "K",
+          "row": 2,
+          "col": 1,
+          "length": 2,
+          "orientation": "h",
+          "isKey": true
+        },
+        {
+          "id": "A",
+          "row": 1,
+          "col": 3,
+          "length": 2,
+          "orientation": "v"
+        },
+        {
+          "id": "E",
+          "row": 2,
+          "col": 4,
+          "length": 2,
+          "orientation": "v"
+        },
+        {
+          "id": "B",
+          "row": 4,
+          "col": 0,
+          "length": 3,
+          "orientation": "h"
+        },
+        {
+          "id": "C",
+          "row": 0,
+          "col": 5,
+          "length": 2,
+          "orientation": "v"
+        }
+      ],
+      "par": 3
+    },
+    "moves": [
+      {
+        "type": "slide",
+        "blockId": "A",
+        "to": 0
+      },
+      {
+        "type": "slide",
+        "blockId": "E",
+        "to": 0
+      },
+      {
+        "type": "slide",
+        "blockId": "K",
+        "to": 4
+      }
+    ],
+    "hintsUsed": 3,
+    "solveTimeMs": 20000,
+    "tFastMs": 20000,
+    "tSlowMs": 80000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "par": 3,
+        "moves": 3
+      },
+      "efficiency": 1,
+      "time": 1,
+      "hintPenalty": 45,
+      "points": 55
+    }
+  },
+  {
+    "name": "ub-a-mid-time",
+    "description": "6x6, solved in the minimal number of moves, at the midpoint of the time window",
+    "payload": {
+      "size": 6,
+      "exitRow": 2,
+      "blocks": [
+        {
+          "id": "K",
+          "row": 2,
+          "col": 1,
+          "length": 2,
+          "orientation": "h",
+          "isKey": true
+        },
+        {
+          "id": "A",
+          "row": 1,
+          "col": 3,
+          "length": 2,
+          "orientation": "v"
+        },
+        {
+          "id": "E",
+          "row": 2,
+          "col": 4,
+          "length": 2,
+          "orientation": "v"
+        },
+        {
+          "id": "B",
+          "row": 4,
+          "col": 0,
+          "length": 3,
+          "orientation": "h"
+        },
+        {
+          "id": "C",
+          "row": 0,
+          "col": 5,
+          "length": 2,
+          "orientation": "v"
+        }
+      ],
+      "par": 3
+    },
+    "moves": [
+      {
+        "type": "slide",
+        "blockId": "A",
+        "to": 0
+      },
+      {
+        "type": "slide",
+        "blockId": "E",
+        "to": 0
+      },
+      {
+        "type": "slide",
+        "blockId": "K",
+        "to": 4
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 50000,
+    "tFastMs": 20000,
+    "tSlowMs": 80000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "par": 3,
+        "moves": 3
+      },
+      "efficiency": 1,
+      "time": 0.5,
+      "hintPenalty": 0,
+      "points": 80
+    }
+  },
+  {
+    "name": "ub-b-minimal",
+    "description": "6x6, single non-blocking obstacle, solved directly (key already has a clear path)",
+    "payload": {
+      "size": 6,
+      "exitRow": 2,
+      "blocks": [
+        {
+          "id": "K",
+          "row": 2,
+          "col": 0,
+          "length": 2,
+          "orientation": "h",
+          "isKey": true
+        },
+        {
+          "id": "A",
+          "row": 0,
+          "col": 3,
+          "length": 3,
+          "orientation": "v"
+        }
+      ],
+      "par": 2
+    },
+    "moves": [
+      {
+        "type": "slide",
+        "blockId": "A",
+        "to": 3
+      },
+      {
+        "type": "slide",
+        "blockId": "K",
+        "to": 4
+      }
+    ],
+    "hintsUsed": 0,
+    "solveTimeMs": 10000,
+    "tFastMs": 8000,
+    "tSlowMs": 30000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "par": 2,
+        "moves": 2
+      },
+      "efficiency": 1,
+      "time": 0.9090909090909091,
+      "hintPenalty": 0,
+      "points": 96
+    }
+  },
+  {
+    "name": "ub-b-one-hint",
+    "description": "6x6, one hint used, then solved",
+    "payload": {
+      "size": 6,
+      "exitRow": 2,
+      "blocks": [
+        {
+          "id": "K",
+          "row": 2,
+          "col": 0,
+          "length": 2,
+          "orientation": "h",
+          "isKey": true
+        },
+        {
+          "id": "A",
+          "row": 0,
+          "col": 3,
+          "length": 3,
+          "orientation": "v"
+        }
+      ],
+      "par": 2
+    },
+    "moves": [
+      {
+        "type": "slide",
+        "blockId": "A",
+        "to": 3
+      },
+      {
+        "type": "slide",
+        "blockId": "K",
+        "to": 4
+      }
+    ],
+    "hintsUsed": 1,
+    "solveTimeMs": 12000,
+    "tFastMs": 8000,
+    "tSlowMs": 30000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "par": 2,
+        "moves": 2
+      },
+      "efficiency": 1,
+      "time": 0.8181818181818181,
+      "hintPenalty": 15,
+      "points": 78
+    }
+  },
+  {
+    "name": "ub-b-unsolved",
+    "description": "6x6, no moves made",
+    "payload": {
+      "size": 6,
+      "exitRow": 2,
+      "blocks": [
+        {
+          "id": "K",
+          "row": 2,
+          "col": 0,
+          "length": 2,
+          "orientation": "h",
+          "isKey": true
+        },
+        {
+          "id": "A",
+          "row": 0,
+          "col": 3,
+          "length": 3,
+          "orientation": "v"
+        }
+      ],
+      "par": 2
+    },
+    "moves": [],
+    "hintsUsed": 0,
+    "solveTimeMs": 5000,
+    "tFastMs": 8000,
+    "tSlowMs": 30000,
+    "expected": {
+      "solved": false,
+      "result": {
+        "par": 2,
+        "moves": 0
+      },
+      "efficiency": 0,
+      "time": 1,
+      "hintPenalty": 0,
+      "points": 0
+    }
+  },
+  {
+    "name": "ub-a-two-hints-slow",
+    "description": "6x6, two hints used, solved slowly",
+    "payload": {
+      "size": 6,
+      "exitRow": 2,
+      "blocks": [
+        {
+          "id": "K",
+          "row": 2,
+          "col": 1,
+          "length": 2,
+          "orientation": "h",
+          "isKey": true
+        },
+        {
+          "id": "A",
+          "row": 1,
+          "col": 3,
+          "length": 2,
+          "orientation": "v"
+        },
+        {
+          "id": "E",
+          "row": 2,
+          "col": 4,
+          "length": 2,
+          "orientation": "v"
+        },
+        {
+          "id": "B",
+          "row": 4,
+          "col": 0,
+          "length": 3,
+          "orientation": "h"
+        },
+        {
+          "id": "C",
+          "row": 0,
+          "col": 5,
+          "length": 2,
+          "orientation": "v"
+        }
+      ],
+      "par": 3
+    },
+    "moves": [
+      {
+        "type": "slide",
+        "blockId": "A",
+        "to": 0
+      },
+      {
+        "type": "slide",
+        "blockId": "E",
+        "to": 0
+      },
+      {
+        "type": "slide",
+        "blockId": "K",
+        "to": 4
+      }
+    ],
+    "hintsUsed": 2,
+    "solveTimeMs": 80000,
+    "tFastMs": 20000,
+    "tSlowMs": 80000,
+    "expected": {
+      "solved": true,
+      "result": {
+        "par": 3,
+        "moves": 3
+      },
+      "efficiency": 1,
+      "time": 0,
+      "hintPenalty": 30,
+      "points": 30
+    }
+  }
+]
