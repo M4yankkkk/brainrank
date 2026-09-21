@@ -28,6 +28,12 @@ describe("app", () => {
     expect(res.json()).toEqual({ ok: true });
   });
 
+  it("GET /ping returns pong", async () => {
+    const res = await app.inject({ method: "GET", url: "/ping" });
+    expect(res.statusCode).toBe(200);
+    expect(res.payload).toBe("pong");
+  });
+
   it("rejects protected routes without a bearer token", async () => {
     const res = await app.inject({ method: "GET", url: "/puzzles/today" });
     expect(res.statusCode).toBe(401);

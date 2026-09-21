@@ -47,6 +47,7 @@ export function buildApp() {
   app.register(authPlugin);
 
   app.get("/health", { schema: { tags: ["meta"] } }, async () => ({ ok: true }));
+  app.get("/ping", { schema: { tags: ["meta"] } }, async () => "pong");
 
   app.register(authRoutes);
   app.register(puzzlesRoutes);
