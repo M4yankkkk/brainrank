@@ -5,6 +5,17 @@ import { db } from "../db/client.js";
 import { stats } from "../db/schema.js";
 
 const statsRoutes: FastifyPluginAsync = async (app) => {
+  const getStatsHandler = async (request: { user?: { id: string } }) => {
+    const rows = await db.select().from(stats).where(eq(stats.userId, request.user!.id));
+    return rows.map((r) => ({
+      puzzleType: r.puzzleType,
+      played: r.played,
+      avgPoints: Number(r.avgPoints),
+      best: r.best,
+      streak: r.streak
+    }));
+  };
+
   app.get(
     "/stats/me",
     {
@@ -14,16 +25,19 @@ const statsRoutes: FastifyPluginAsync = async (app) => {
       },
       preHandler: app.requireAuth
     },
-    async (request) => {
-      const rows = await db.select().from(stats).where(eq(stats.userId, request.user!.id));
-      return rows.map((r) => ({
-        puzzleType: r.puzzleType,
-        played: r.played,
-        avgPoints: Number(r.avgPoints),
-        best: r.best,
-        streak: r.streak
-      }));
-    }
+    getStatsHandler
+  );
+
+  app.get(
+    "/stats",
+    {
+      schema: {
+        tags: ["stats"],
+        summary: "Alias to /stats/me."
+      },
+      preHandler: app.requireAuth
+    },
+    getStatsHandler
   );
 };
 

@@ -87,7 +87,7 @@ export default function HomePage() {
       try {
         const [todayRes, statsRes, groups] = await Promise.all([
           apiFetch<TodayResponse>(`/puzzles/today?date=${todayLocalDate()}`),
-          apiFetch<StatsRow[]>("/stats"),
+          apiFetch<StatsRow[]>("/stats/me"),
           apiFetch<GroupSummary[]>("/groups")
         ]);
         if (cancelled) return;
