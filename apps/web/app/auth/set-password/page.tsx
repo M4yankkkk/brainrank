@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import Link from "next/link";
+
 import { createSupabaseBrowserClient } from "../../../lib/supabaseClient";
 import { BrandMark } from "../../../components/BrandMark";
 
@@ -15,14 +17,41 @@ export default function SetPasswordPage() {
 
   useEffect(() => {
     const supabase = createSupabaseBrowserClient();
+
+    // 1. Check if session already exists
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        router.replace("/sign-up");
-        return;
+      if (session) {
+        setStatus("idle");
       }
-      setStatus("idle");
     });
-  }, [router]);
+
+    // 2. Listen for auth state change (e.g. tokens in hash fragment or cookie hydration)
+    const {
+      data: { subscription }
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        setStatus("idle");
+      }
+    });
+
+    // 3. Grace period for token parsing before showing error
+    const timer = setTimeout(async () => {
+      const {
+        data: { session }
+      } = await supabase.auth.getSession();
+      if (!session) {
+        setStatus("error");
+        setError("Your session or verification link may have expired. Please request a new link.");
+      } else {
+        setStatus("idle");
+      }
+    }, 2500);
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timer);
+    };
+  }, []);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -51,7 +80,25 @@ export default function SetPasswordPage() {
 
   if (status === "checking") {
     return (
-      <div className="app-shell flex min-h-screen items-center justify-center text-sm font-medium text-ink-2">Loading…</div>
+      <div className="app-shell flex min-h-screen items-center justify-center text-sm font-medium text-ink-2">Verifying link…</div>
+    );
+  }
+
+  if (status === "error" && !password) {
+    return (
+      <div className="app-shell flex min-h-screen flex-col items-center justify-center">
+        <BrandMark />
+        <div className="w-full max-w-sm rounded-xl bg-card p-6 shadow-card-rest text-center">
+          <h1 className="mb-2 font-display text-2xl font-extrabold tracking-tight">Link Expired or Invalid</h1>
+          <p className="mb-6 text-sm font-medium text-ink-2">{error ?? "Your link may have already been used or expired."}</p>
+          <Link
+            href="/sign-up"
+            className="inline-block rounded-md bg-violet px-5 py-3 text-sm font-bold text-white shadow-play no-underline"
+          >
+            Back to Sign Up
+          </Link>
+        </div>
+      </div>
     );
   }
 
