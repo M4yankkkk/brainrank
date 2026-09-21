@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 
 import { apiFetch } from "../../../lib/apiClient";
+import { todayLocalDate } from "../../../lib/localDate";
 import { TabBar } from "../../../components/TabBar";
 import { UserAvatar } from "../../../components/UserAvatar";
 import { useToast } from "../../../components/ToastProvider";
@@ -53,7 +54,7 @@ export default function GroupDetailPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    apiFetch<GroupDetail>(`/groups/${params.id}`)
+    apiFetch<GroupDetail>(`/groups/${params.id}?date=${todayLocalDate()}`)
       .then(setDetail)
       .catch((err) => setError(err instanceof Error ? err.message : "Failed to load squad"));
   }, [params.id]);

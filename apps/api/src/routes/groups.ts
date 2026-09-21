@@ -97,11 +97,19 @@ const groupsRoutes: FastifyPluginAsync = async (app) => {
   app.get(
     "/groups/:id",
     {
-      schema: { tags: ["groups"], summary: "Group detail: members, today's leaderboard, and the current season's standings." },
+      schema: {
+        tags: ["groups"],
+        summary: "Group detail: members, today's leaderboard, and the current season's standings.",
+        querystring: z.object({
+          date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "date must be YYYY-MM-DD").optional()
+        })
+      },
       preHandler: app.requireAuth
     },
     async (request, reply) => {
       const { id } = request.params as { id: string };
+      const { date } = (request.query ?? {}) as { date?: string };
+      const targetDate = date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : new Date().toISOString().slice(0, 10);
 
       const [membership] = await db
         .select()
@@ -120,10 +128,12 @@ const groupsRoutes: FastifyPluginAsync = async (app) => {
         .where(and(eq(groupMembers.groupId, id), eq(groupMembers.isActive, true)));
       const memberIds = memberRows.map((m) => m.user.id);
 
-      const today = new Date().toISOString().slice(0, 10);
       const todayScores =
         memberIds.length > 0
-          ? await db.select().from(dailyScores).where(and(eq(dailyScores.localDate, today), inArray(dailyScores.userId, memberIds)))
+          ? await db
+              .select()
+              .from(dailyScores)
+              .where(and(eq(dailyScores.localDate, targetDate), inArray(dailyScores.userId, memberIds)))
           : [];
       const todayByUser = new Map(todayScores.map((s) => [s.userId, s]));
 
@@ -142,14 +152,28 @@ const groupsRoutes: FastifyPluginAsync = async (app) => {
       return {
         group,
         members: memberRows
-          .map((m) => ({
-            userId: m.user.id,
-            username: m.user.username,
-            avatarUrl: m.user.avatarUrl,
-            role: m.role,
-            today: todayByUser.get(m.user.id) ?? { totalPoints: 0, puzzlesCompleted: 0 },
-            season: standingsByUser.get(m.user.id) ?? { points: 0, daysPlayed: 0, fullSets: 0, bestDay: 0 }
-          }))
+          .map((m) => {
+            const todayScore = todayByUser.get(m.user.id) ?? { totalPoints: 0, puzzlesCompleted: 0 };
+            const seasonStanding = standingsByUser.get(m.user.id) ?? { points: 0, daysPlayed: 0, fullSets: 0, bestDay: 0 };
+            const liveSeasonPoints = seasonStanding.points + todayScore.totalPoints;
+            const liveDaysPlayed = seasonStanding.daysPlayed + (todayScore.puzzlesCompleted > 0 || todayScore.totalPoints > 0 ? 1 : 0);
+            const liveFullSets = seasonStanding.fullSets + (todayScore.puzzlesCompleted >= 3 ? 1 : 0);
+            const liveBestDay = Math.max(seasonStanding.bestDay, todayScore.totalPoints);
+            return {
+              userId: m.user.id,
+              username: m.user.username,
+              avatarUrl: m.user.avatarUrl,
+              role: m.role,
+              today: todayScore,
+              season: {
+                ...seasonStanding,
+                points: liveSeasonPoints,
+                daysPlayed: liveDaysPlayed,
+                fullSets: liveFullSets,
+                bestDay: liveBestDay
+              }
+            };
+          })
           .sort((a, b) => b.season.points - a.season.points),
         currentSeason
       };

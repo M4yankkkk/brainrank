@@ -41,6 +41,7 @@ interface GroupMember {
   username: string;
   avatarUrl?: string | null;
   role: string;
+  today: { totalPoints: number; puzzlesCompleted: number };
   season: { points: number; daysPlayed: number; fullSets: number; bestDay: number };
 }
 
@@ -63,6 +64,7 @@ export default function HomePage() {
   const [today, setToday] = useState<TodayResponse | null>(null);
   const [stats, setStats] = useState<StatsRow[]>([]);
   const [group, setGroup] = useState<GroupDetail | null>(null);
+  const [squadTab, setSquadTab] = useState<"today" | "season">("today");
   const [countdown, setCountdown] = useState("");
   const [error, setError] = useState<string | null>(null);
 
@@ -85,7 +87,7 @@ export default function HomePage() {
       try {
         const [todayRes, statsRes, groups] = await Promise.all([
           apiFetch<TodayResponse>(`/puzzles/today?date=${todayLocalDate()}`),
-          apiFetch<StatsRow[]>("/stats/me"),
+          apiFetch<StatsRow[]>("/stats"),
           apiFetch<GroupSummary[]>("/groups")
         ]);
         if (cancelled) return;
@@ -93,7 +95,7 @@ export default function HomePage() {
         setStats(statsRes);
 
         if (groups.length > 0) {
-          const detail = await apiFetch<GroupDetail>(`/groups/${groups[0].id}`);
+          const detail = await apiFetch<GroupDetail>(`/groups/${groups[0].id}?date=${todayLocalDate()}`);
           if (!cancelled) setGroup(detail);
         }
       } catch (err) {
@@ -126,6 +128,11 @@ export default function HomePage() {
   const totalPoints = today?.puzzles.reduce((sum, p) => sum + (p.attempt?.points ?? 0), 0) ?? 0;
   const solvedCount = today?.puzzles.filter((p) => p.attempt?.solved).length ?? 0;
   const bestStreak = stats.length > 0 ? Math.max(...stats.map((s) => s.streak)) : null;
+  const sortedSquadMembers = group
+    ? squadTab === "today"
+      ? [...group.members].sort((a, b) => b.today.totalPoints - a.today.totalPoints)
+      : [...group.members].sort((a, b) => b.season.points - a.season.points)
+    : [];
 
   if (error) {
     return (
@@ -172,7 +179,9 @@ export default function HomePage() {
         </div>
         <div className="text-right">
           <b className="block font-display text-[40px] font-extrabold leading-none tracking-tight">{totalPoints}</b>
-          <span className="text-[13px] font-semibold text-ink-2">of 300 points</span>
+          <span className="text-[13px] font-semibold text-ink-2">
+            of {today?.puzzles.length ? today.puzzles.length * 100 : 300} points
+          </span>
         </div>
       </section>
 
@@ -205,15 +214,36 @@ export default function HomePage() {
             </a>
           </div>
           <div className="season-panel">
-            {group.currentSeason && (
-              <div className="mx-1 mb-3 flex items-center justify-between text-[13px] font-semibold text-ink-2">
-                <span>
-                  Season {group.currentSeason.number} · {group.currentSeason.startDate} – {group.currentSeason.endDate}
-                </span>
+            <div className="mx-1 mb-3 flex items-center justify-between">
+              <div className="flex rounded-xl bg-tray/80 p-0.5">
+                <button
+                  type="button"
+                  onClick={() => setSquadTab("today")}
+                  className={`rounded-lg py-1 px-2.5 text-xs font-bold transition-all ${
+                    squadTab === "today" ? "bg-card text-ink shadow-sm" : "text-ink-2 hover:text-ink"
+                  }`}
+                >
+                  Today&apos;s Battle
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSquadTab("season")}
+                  className={`rounded-lg py-1 px-2.5 text-xs font-bold transition-all ${
+                    squadTab === "season" ? "bg-card text-ink shadow-sm" : "text-ink-2 hover:text-ink"
+                  }`}
+                >
+                  Season Standings
+                </button>
               </div>
-            )}
+              {group.currentSeason && (
+                <span className="text-xs font-semibold text-ink-2">
+                  Season {group.currentSeason.number}
+                </span>
+              )}
+            </div>
+
             <div className="flex flex-col gap-1.5">
-              {group.members.map((member, rank) => (
+              {sortedSquadMembers.map((member, rank) => (
                 <div key={member.userId} className={`leaderboard-row ${member.userId === userId ? "you" : ""}`}>
                   <span className="w-[18px] text-center font-display text-base font-extrabold text-ink-2">{rank + 1}</span>
                   <UserAvatar
@@ -224,10 +254,18 @@ export default function HomePage() {
                     crown={rank === 0}
                   />
                   <div className="min-w-0 flex-1">
-                    <b className="block text-[15px] font-bold">{member.userId === userId ? "You" : member.username}</b>
+                    <b className="block text-[15px] font-bold text-ink">{member.userId === userId ? "You" : member.username}</b>
+                    <span className="block text-[11px] font-semibold text-ink-2">
+                      {squadTab === "today"
+                        ? `${member.today.puzzlesCompleted}/3 solved`
+                        : `${member.season.daysPlayed} days active`}
+                    </span>
                   </div>
-                  <div className="text-right">
-                    <b className="block font-display text-lg font-extrabold tracking-tight">{member.season.points}</b>
+                  <div className="text-right flex-none">
+                    <b className="block font-display text-lg font-extrabold tracking-tight text-ink">
+                      {squadTab === "today" ? member.today.totalPoints : member.season.points}
+                    </b>
+                    <span className="block text-[10px] font-semibold text-ink-3">pts</span>
                   </div>
                 </div>
               ))}
