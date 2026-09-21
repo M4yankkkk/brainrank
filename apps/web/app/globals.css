@@ -1,0 +1,368 @@
+@import "@brainrank/tokens/tokens.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* next/font self-hosts these and exposes them as CSS vars on <html> (see app/layout.tsx);
+     layer them in front of the generic family names tokens.css already declared. */
+  --font-display: var(--font-bricolage), 'Bricolage Grotesque', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-ui: var(--font-plus-jakarta), 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+}
+
+.app-shell {
+  max-width: 440px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: 18px 18px 110px;
+  position: relative;
+}
+
+/* Puzzle cards (home screen), ported 1:1 from the approved mockup. */
+.puzzle-card {
+  --c: var(--violet);
+  --cd: var(--violet-deep);
+  --cs: var(--violet-soft);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--card);
+  border-radius: var(--radius-xl);
+  padding: 14px;
+  box-shadow: 0 5px 0 var(--edge);
+  border: none;
+  width: 100%;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    transform 0.12s cubic-bezier(0.3, 1.6, 0.5, 1),
+    box-shadow 0.12s;
+}
+.puzzle-card:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 var(--edge);
+}
+.puzzle-card:focus-visible {
+  outline: 3px solid var(--c);
+  outline-offset: 3px;
+}
+.puzzle-card[data-puzzle="shiftword"] {
+  --c: var(--orange);
+  --cd: var(--orange-deep);
+  --cs: var(--orange-soft);
+}
+.puzzle-card[data-puzzle="unblock"] {
+  --c: var(--teal);
+  --cd: var(--teal-deep);
+  --cs: var(--teal-soft);
+}
+
+.puzzle-board {
+  width: 92px;
+  height: 92px;
+  flex: none;
+  border-radius: var(--radius-lg);
+  background: var(--cs);
+  padding: 8px;
+  position: relative;
+}
+
+.puzzle-play {
+  flex: none;
+  background: var(--c);
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  border-radius: var(--radius-md);
+  padding: 11px 16px;
+  box-shadow: 0 3px 0 var(--cd);
+}
+
+.puzzle-done {
+  flex: none;
+  text-align: center;
+  min-width: 64px;
+}
+.puzzle-done b {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--c);
+  line-height: 1;
+  display: block;
+}
+.puzzle-done span {
+  font-size: 12px;
+  color: var(--ink2);
+  font-weight: 600;
+}
+
+.dots {
+  display: flex;
+  gap: 3px;
+}
+.dots i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--line);
+  font-style: normal;
+}
+.dots i.on {
+  background: var(--c);
+}
+
+/* Mini board previews */
+.mini-sf {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+  height: 100%;
+}
+.mini-sf i {
+  border-radius: 3px;
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  color: #fff;
+  font-style: normal;
+}
+.mini-sf .r0 {
+  background: #b9a8ff;
+}
+.mini-sf .r1 {
+  background: #9d86f7;
+}
+.mini-sf .r2 {
+  background: #cfc3ff;
+}
+.mini-sf .r3 {
+  background: #8a70f0;
+}
+.mini-sf .r4 {
+  background: #dcd3ff;
+}
+
+.mini-sw {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+  height: 100%;
+}
+.mini-sw i {
+  background: var(--card);
+  border-radius: 4px;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 12px;
+  font-style: normal;
+  color: var(--ink);
+  box-shadow: 0 1.5px 0 var(--edge);
+}
+.mini-sw i.ok {
+  background: var(--good);
+  color: #fff;
+}
+
+.mini-ub {
+  position: relative;
+  height: 100%;
+  border-radius: 6px;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 calc(100% / 6 - 1px),
+      rgba(20, 168, 155, 0.15) calc(100% / 6 - 1px) calc(100% / 6)
+    ),
+    var(--cs);
+}
+.mini-ub i {
+  position: absolute;
+  border-radius: 4px;
+  background: #8fd9d1;
+  box-shadow: 0 1.5px 0 rgba(12, 128, 118, 0.35);
+}
+.mini-ub i.key {
+  background: var(--orange);
+}
+.mini-ub .exit {
+  position: absolute;
+  right: -8px;
+  top: calc(100% / 6 * 2 + 2px);
+  width: 4px;
+  height: calc(100% / 6 - 4px);
+  background: var(--orange);
+  border-radius: 2px;
+}
+
+/* Group / season */
+.season-panel {
+  background: var(--tray);
+  border-radius: var(--radius-xl);
+  padding: 14px;
+}
+.season-days {
+  display: flex;
+  gap: 3px;
+}
+.season-days i {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  background: var(--line);
+  font-style: normal;
+}
+.season-days i.on {
+  background: var(--ink);
+}
+.season-days i.now {
+  background: var(--violet);
+}
+.leaderboard-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  padding: 10px 12px;
+}
+.leaderboard-row.you {
+  outline: 2px solid var(--violet);
+}
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  position: relative;
+  flex: none;
+}
+.pips {
+  display: flex;
+  gap: 3px;
+  margin-top: 4px;
+}
+.pips i {
+  width: 14px;
+  height: 5px;
+  border-radius: 9px;
+  background: var(--line);
+  font-style: normal;
+}
+.pips i.v {
+  background: var(--violet);
+}
+.pips i.o {
+  background: var(--orange);
+}
+.pips i.t {
+  background: var(--teal);
+}
+
+/* Tab bar */
+.tab-bar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  width: min(440px, 100%);
+  padding: 10px 18px calc(14px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(to top, var(--bg) 70%, transparent);
+}
+.tab-bar nav {
+  display: flex;
+  justify-content: space-around;
+  background: var(--ink);
+  border-radius: var(--radius-xl);
+  padding: 10px 6px;
+}
+.tab-bar a {
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 12px;
+}
+.tab-bar a.on {
+  color: #fff;
+}
+.tab-bar svg {
+  width: 22px;
+  height: 22px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .tab-bar nav {
+    background: #2c3254;
+  }
+}
+:root[data-theme="dark"] .tab-bar nav {
+  background: #2c3254;
+}
+
+/* Entrance animation for the card stack */
+@media (prefers-reduced-motion: no-preference) {
+  .card-drop {
+    animation: card-drop 0.5s cubic-bezier(0.3, 1.5, 0.5, 1) both;
+  }
+  @keyframes card-drop {
+    from {
+      opacity: 0;
+      transform: translateY(-14px) scale(0.97);
+    }
+  }
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 110px;
+  transform: translate(-50%, 20px);
+  background: var(--ink);
+  color: var(--bg);
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0;
+  transition: 0.25s;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 50;
+}
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}

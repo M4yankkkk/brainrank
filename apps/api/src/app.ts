@@ -10,6 +10,7 @@ import puzzlesRoutes from "./routes/puzzles.js";
 import attemptsRoutes from "./routes/attempts.js";
 import groupsRoutes from "./routes/groups.js";
 import storageRoutes from "./routes/storage.js";
+import statsRoutes from "./routes/stats.js";
 import cronRoutes from "./routes/cron.js";
 
 export function buildApp() {
@@ -50,6 +51,7 @@ export function buildApp() {
   app.register(attemptsRoutes);
   app.register(groupsRoutes);
   app.register(storageRoutes);
+  app.register(statsRoutes);
   app.register(cronRoutes);
 
   return app;
