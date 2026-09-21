@@ -9,8 +9,20 @@ import { useAttemptSubmit } from "../../lib/useAttemptSubmit";
 import { PuzzleFrame } from "./PuzzleFrame";
 import { PuzzleResult } from "./PuzzleResult";
 import { SubmitErrorScreen } from "./SubmitErrorScreen";
+import { StarIcon, CloseIcon } from "../Icons";
 
-const REGION_PALETTE = ["#B9A8FF", "#9D86F7", "#CFC3FF", "#8A70F0", "#DCD3FF", "#C4B5FF", "#A895F9", "#E2D9FF", "#7E62F0"];
+const REGION_PALETTE = [
+  "#7E62F0", // 0: Violet
+  "#F59E0B", // 1: Amber
+  "#0D9488", // 2: Teal
+  "#E11D48", // 3: Rose
+  "#10B981", // 4: Emerald
+  "#2563EB", // 5: Cobalt Blue
+  "#FF7F36", // 6: Warm Orange
+  "#9333EA", // 7: Deep Purple
+  "#0284C7", // 8: Sky Blue
+  "#C026D3"  // 9: Fuchsia
+];
 
 function nextMark(mark: CellMark): CellMark {
   if (mark === "empty") return "x";
@@ -103,12 +115,16 @@ export function StarfieldPuzzle() {
               key={`${r}-${c}`}
               type="button"
               onClick={() => handleCellClick(r, c)}
-              className="grid place-items-center rounded-sm text-lg font-bold"
+              className="grid place-items-center rounded-sm transition-transform active:scale-95"
               style={{ background: REGION_PALETTE[board.regions[r][c] % REGION_PALETTE.length] }}
               aria-label={`Row ${r + 1}, column ${c + 1}, ${mark}`}
             >
-              {mark === "star" && <span className="text-white">★</span>}
-              {mark === "x" && <span className="text-white/70">✕</span>}
+              {mark === "star" && (
+                <StarIcon className="h-6 w-6 text-white fill-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]" />
+              )}
+              {mark === "x" && (
+                <CloseIcon className="h-4 w-4 text-white/80 drop-shadow-[0_1px_1px_rgba(0,0,0,0.3)]" />
+              )}
             </button>
           ))
         )}
