@@ -34,6 +34,19 @@ describe("app", () => {
     expect(res.payload).toBe("pong");
   });
 
+  it("handles CORS preflight for allowed origin", async () => {
+    const res = await app.inject({
+      method: "OPTIONS",
+      url: "/auth/username-available",
+      headers: {
+        origin: "http://localhost:3000",
+        "access-control-request-method": "GET"
+      }
+    });
+    expect(res.statusCode).toBe(204);
+    expect(res.headers["access-control-allow-origin"]).toBe("http://localhost:3000");
+  });
+
   it("rejects protected routes without a bearer token", async () => {
     const res = await app.inject({ method: "GET", url: "/puzzles/today" });
     expect(res.statusCode).toBe(401);

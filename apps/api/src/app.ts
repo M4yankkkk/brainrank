@@ -20,7 +20,26 @@ export function buildApp() {
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
 
-  app.register(cors, { origin: env.WEB_ORIGIN.split(",").map((s) => s.trim()) });
+  const allowedOrigins = env.WEB_ORIGIN.split(",")
+    .map((s) => s.trim().replace(/\/+$/, ""))
+    .filter(Boolean);
+
+  app.register(cors, {
+    origin: (origin, cb) => {
+      if (!origin) return cb(null, true);
+      const normalized = origin.trim().replace(/\/+$/, "");
+      if (
+        allowedOrigins.includes(normalized) ||
+        allowedOrigins.some((allowed) => allowed.includes("vercel.app") && normalized.endsWith(".vercel.app"))
+      ) {
+        return cb(null, true);
+      }
+      return cb(null, false);
+    },
+    credentials: true,
+    methods: ["GET", "HEAD", "PUT", "POST", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "x-cron-secret"]
+  });
 
   app.register(swagger, {
     openapi: {
