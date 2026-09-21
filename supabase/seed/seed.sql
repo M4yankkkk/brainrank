@@ -72,7 +72,11 @@ unblock_puzzles as (
         jsonb_build_object('id', 'E', 'row', 2, 'col', 4, 'length', 2, 'orientation', 'v'),
         jsonb_build_object('id', 'B', 'row', 4, 'col', 0, 'length', 3, 'orientation', 'h'),
         jsonb_build_object('id', 'C', 'row', 0, 'col', 5, 'length', 2, 'orientation', 'v')
-      )
+      ),
+      -- UnblockPayload.par is read by the engine itself (unblock.init -> state.par,
+      -- used by efficiency()); it must live inside the payload, not just the
+      -- separate `par` column below (which is for querying/display only).
+      'par', 3
     ),
     3,
     20000,

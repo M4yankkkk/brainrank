@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { createSupabaseBrowserClient } from "../lib/supabaseClient";
 import { apiFetch } from "../lib/apiClient";
@@ -9,6 +10,9 @@ import { todayLocalDate, msUntilLocalMidnight } from "../lib/localDate";
 import { PuzzleCard, type PuzzleId } from "../components/PuzzleCard";
 import { TabBar } from "../components/TabBar";
 import { useToast } from "../components/ToastProvider";
+import { UserAvatar } from "../components/UserAvatar";
+import { useCurrentUser } from "../lib/useCurrentUser";
+import { FlameIcon } from "../components/Icons";
 
 interface TodayPuzzle {
   id: string;
@@ -35,6 +39,7 @@ interface GroupSummary {
 interface GroupMember {
   userId: string;
   username: string;
+  avatarUrl?: string | null;
   role: string;
   season: { points: number; daysPlayed: number; fullSets: number; bestDay: number };
 }
@@ -52,6 +57,7 @@ function initials(name: string): string {
 export default function HomePage() {
   const router = useRouter();
   const showToast = useToast();
+  const currentUser = useCurrentUser();
 
   const [userId, setUserId] = useState<string | null>(null);
   const [today, setToday] = useState<TodayResponse | null>(null);
@@ -144,12 +150,18 @@ export default function HomePage() {
         <div className="flex items-center gap-2.5">
           {bestStreak !== null && bestStreak > 0 && (
             <div className="flex items-center gap-1.5 rounded-pill bg-card py-[7px] pl-2.5 pr-3 text-sm font-bold shadow-streak">
-              🔥 {bestStreak}
+              <FlameIcon className="h-4 w-4 text-orange" />
+              <span>{bestStreak}</span>
             </div>
           )}
-          <div className="grid h-9 w-9 place-items-center rounded-full border-[3px] border-card bg-orange text-sm font-bold text-white">
-            {userId ? initials(userId) : "…"}
-          </div>
+          <Link href="/profile" className="transition-transform active:scale-95" title="View Profile">
+            <UserAvatar
+              name={currentUser?.username ?? group?.members.find((m) => m.userId === userId)?.username ?? "player"}
+              src={currentUser?.avatarUrl ?? group?.members.find((m) => m.userId === userId)?.avatarUrl}
+              size={36}
+              animate="hover"
+            />
+          </Link>
         </div>
       </header>
 
@@ -204,10 +216,13 @@ export default function HomePage() {
               {group.members.map((member, rank) => (
                 <div key={member.userId} className={`leaderboard-row ${member.userId === userId ? "you" : ""}`}>
                   <span className="w-[18px] text-center font-display text-base font-extrabold text-ink-2">{rank + 1}</span>
-                  <span className="avatar" style={{ background: rank === 0 ? "#7E62F0" : "#14A89B" }}>
-                    {initials(member.username)}
-                    {rank === 0 && <span className="absolute -right-1 -top-2 text-sm">👑</span>}
-                  </span>
+                  <UserAvatar
+                    name={member.username}
+                    src={member.avatarUrl}
+                    size={34}
+                    animate="hover"
+                    crown={rank === 0}
+                  />
                   <div className="min-w-0 flex-1">
                     <b className="block text-[15px] font-bold">{member.userId === userId ? "You" : member.username}</b>
                   </div>

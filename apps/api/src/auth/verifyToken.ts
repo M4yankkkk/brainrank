@@ -7,12 +7,15 @@ const JWKS = createRemoteJWKSet(new URL("/auth/v1/.well-known/jwks.json", env.SU
 export interface SupabaseUser {
   id: string;
   email?: string;
+  /** Chosen at sign-up (stored in Supabase's user_metadata) - used to provision public.users.username on first request. */
+  username?: string;
 }
 
 export interface SupabaseAccessTokenPayload extends JWTPayload {
   sub: string;
   email?: string;
   role?: string;
+  user_metadata?: { username?: string };
 }
 
 /**
@@ -29,5 +32,5 @@ export async function verifySupabaseAccessToken(token: string): Promise<Supabase
   if (!payload.sub) {
     throw new Error("Token payload missing sub claim");
   }
-  return { id: payload.sub, email: payload.email };
+  return { id: payload.sub, email: payload.email, username: payload.user_metadata?.username };
 }

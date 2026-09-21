@@ -73,6 +73,15 @@ const attemptsRoutes: FastifyPluginAsync = async (app) => {
         solved
       });
 
+      // A malformed stored payload (e.g. a puzzle-type-specific field like Unblock's
+      // `par` missing from the JSON) can make efficiency()/computeScore() produce NaN,
+      // which Postgres rejects with an opaque "invalid input syntax for type integer"
+      // error. Catch that here with a clear message instead of a raw 500 from the DB.
+      if (!Number.isFinite(score.points)) {
+        request.log.error({ puzzleId: puzzle.id, payload: puzzle.payload, efficiency, score }, "computeScore produced a non-finite result");
+        return reply.code(500).send({ error: "This puzzle's data is misconfigured and can't be scored. Please report this." });
+      }
+
       const plausible = body.activeTimeMs >= puzzle.tFastMs * MIN_PLAUSIBLE_TIME_FRACTION;
 
       const inserted = await db

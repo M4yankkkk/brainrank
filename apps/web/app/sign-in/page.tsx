@@ -1,88 +1,88 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 import { createSupabaseBrowserClient } from "../../lib/supabaseClient";
+import { apiFetch, ApiError } from "../../lib/apiClient";
+import { BrandMark } from "../../components/BrandMark";
 
 export default function SignInPage() {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const router = useRouter();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [status, setStatus] = useState<"idle" | "submitting" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
 
-  async function signInWithGoogle() {
-    const supabase = createSupabaseBrowserClient();
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback` }
-    });
-  }
-
-  async function sendMagicLink(e: React.FormEvent) {
+  async function signIn(e: React.FormEvent) {
     e.preventDefault();
-    setStatus("sending");
+    setStatus("submitting");
     setError(null);
-    const supabase = createSupabaseBrowserClient();
-    const { error: authError } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback` }
-    });
-    if (authError) {
+    try {
+      // Supabase Auth only knows email/phone, not usernames, so resolve the
+      // username to its email first - the actual credential check still
+      // happens entirely inside Supabase via signInWithPassword below.
+      const { email } = await apiFetch<{ email: string }>("/auth/resolve-username", {
+        method: "POST",
+        body: JSON.stringify({ username })
+      });
+
+      const supabase = createSupabaseBrowserClient();
+      const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+      if (authError) throw authError;
+
+      router.replace("/");
+    } catch (err) {
       setStatus("error");
-      setError(authError.message);
-      return;
+      setError(err instanceof ApiError && err.status === 404 ? "No account with that username" : "Incorrect username or password");
     }
-    setStatus("sent");
   }
 
   return (
     <div className="app-shell flex min-h-screen flex-col items-center justify-center">
-      <div className="brand mb-8 flex items-center gap-2 font-display text-[22px] font-extrabold tracking-tight">
-        <span className="grid h-[26px] w-[26px] grid-cols-2 gap-[3px] rounded-lg bg-ink p-[5px]">
-          <i className="rounded-[2px] bg-violet" />
-          <i className="rounded-[2px] bg-bg" />
-          <i className="rounded-[2px] bg-bg" />
-          <i className="rounded-[2px] bg-orange" />
-        </span>
-        Brainrank
-      </div>
+      <BrandMark />
 
       <div className="w-full max-w-sm rounded-xl bg-card p-6 shadow-card-rest">
         <h1 className="mb-1 font-display text-2xl font-extrabold tracking-tight">Sign in</h1>
         <p className="mb-6 text-sm font-medium text-ink-2">Your group's daily brain battle.</p>
 
-        <button
-          type="button"
-          onClick={signInWithGoogle}
-          className="mb-4 w-full rounded-md border border-line bg-card px-4 py-3 text-sm font-semibold text-ink transition active:translate-y-[2px]"
-        >
-          Continue with Google
-        </button>
-
-        <div className="my-4 flex items-center gap-3 text-xs font-semibold text-ink-2">
-          <span className="h-px flex-1 bg-line" />
-          or
-          <span className="h-px flex-1 bg-line" />
-        </div>
-
-        <form onSubmit={sendMagicLink} className="flex flex-col gap-3">
+        <form onSubmit={signIn} className="flex flex-col gap-3">
           <input
-            type="email"
+            type="text"
             required
-            placeholder="you@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="username"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="rounded-md border border-line bg-bg px-4 py-3 text-sm font-medium text-ink outline-none focus:border-violet"
+          />
+          <input
+            type="password"
+            required
+            autoComplete="current-password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="rounded-md border border-line bg-bg px-4 py-3 text-sm font-medium text-ink outline-none focus:border-violet"
           />
           <button
             type="submit"
-            disabled={status === "sending"}
+            disabled={status === "submitting"}
             className="rounded-md bg-violet px-4 py-3 text-sm font-bold text-white shadow-play disabled:opacity-60"
           >
-            {status === "sending" ? "Sending…" : "Send magic link"}
+            {status === "submitting" ? "Signing in…" : "Sign in"}
           </button>
         </form>
 
-        {status === "sent" && <p className="mt-4 text-sm font-medium text-good">Check your email for a sign-in link.</p>}
         {status === "error" && error && <p className="mt-4 text-sm font-medium text-orange-deep">{error}</p>}
+
+        <p className="mt-6 text-center text-sm font-medium text-ink-2">
+          New here?{" "}
+          <Link href="/sign-up" className="font-bold text-violet no-underline">
+            Create an account
+          </Link>
+        </p>
       </div>
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import type { PuzzleId } from "../PuzzleCard";
+import { UndoIcon, LightbulbIcon } from "../Icons";
 
 const DISPLAY_NAME: Record<PuzzleId, string> = {
   starfield: "Starfield",
@@ -62,17 +63,19 @@ export function PuzzleFrame({
           type="button"
           onClick={onUndo}
           disabled={!onUndo || undoDisabled}
-          className="flex flex-col items-center gap-1 text-xs font-semibold text-ink-2 disabled:opacity-40"
+          className="flex flex-col items-center gap-1 text-xs font-semibold text-ink-2 disabled:opacity-40 hover:text-ink transition-colors"
         >
-          ↶ Undo
+          <UndoIcon className="h-4 w-4" />
+          <span>Undo</span>
         </button>
         <button
           type="button"
           onClick={onHint}
           disabled={hintDisabled}
-          className="flex flex-col items-center gap-1 text-xs font-semibold text-ink-2 disabled:opacity-40"
+          className="flex flex-col items-center gap-1 text-xs font-semibold text-ink-2 disabled:opacity-40 hover:text-ink transition-colors"
         >
-          💡 Hint (−15)
+          <LightbulbIcon className="h-4 w-4" />
+          <span>Hint (−15)</span>
         </button>
       </footer>
     </div>

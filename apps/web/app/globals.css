@@ -1,4 +1,6 @@
 @import "@brainrank/tokens/tokens.css";
+@import "blobatar/motion.css";
+@import "blobatar/gaze.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

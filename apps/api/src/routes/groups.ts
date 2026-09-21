@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from "fastify";
-import { and, desc, eq, inArray } from "drizzle-orm";
+import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { z } from "zod";
 
 import { db } from "../db/client.js";
@@ -82,11 +82,15 @@ const groupsRoutes: FastifyPluginAsync = async (app) => {
     { schema: { tags: ["groups"], summary: "Groups the caller is an active member of." }, preHandler: app.requireAuth },
     async (request) => {
       const rows = await db
-        .select({ group: groups, role: groupMembers.role })
+        .select({
+          group: groups,
+          role: groupMembers.role,
+          memberCount: sql<number>`(select count(*)::int from group_members where group_id = ${groups.id} and is_active = true)`
+        })
         .from(groupMembers)
         .innerJoin(groups, eq(groups.id, groupMembers.groupId))
         .where(and(eq(groupMembers.userId, request.user!.id), eq(groupMembers.isActive, true)));
-      return rows.map(({ group, role }) => ({ ...group, myRole: role }));
+      return rows.map(({ group, role, memberCount }) => ({ ...group, myRole: role, memberCount: Number(memberCount) || 1 }));
     }
   );
 

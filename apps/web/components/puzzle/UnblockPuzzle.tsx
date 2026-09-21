@@ -4,11 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import { useDrag } from "@use-gesture/react";
 import { unblock, type UnblockPayload, type UnblockState, type UnblockMove, type Block } from "@brainrank/engine";
 
-import { apiFetch } from "../../lib/apiClient";
 import { useActiveTimer } from "../../lib/useActiveTimer";
 import { usePuzzleOfTheDay } from "../../lib/usePuzzleOfTheDay";
+import { useAttemptSubmit } from "../../lib/useAttemptSubmit";
 import { PuzzleFrame } from "./PuzzleFrame";
-import { PuzzleResult, type AttemptResult } from "./PuzzleResult";
+import { PuzzleResult } from "./PuzzleResult";
+import { SubmitErrorScreen } from "./SubmitErrorScreen";
 
 export function UnblockPuzzle() {
   const { puzzle, error } = usePuzzleOfTheDay<UnblockPayload>("unblock");
@@ -17,7 +18,7 @@ export function UnblockPuzzle() {
   const [state, setState] = useState<UnblockState | null>(null);
   const [moveLog, setMoveLog] = useState<UnblockMove[]>([]);
   const [hintsUsed, setHintsUsed] = useState(0);
-  const [result, setResult] = useState<AttemptResult | null>(null);
+  const { result, error: submitError, submit, retry } = useAttemptSubmit();
   const [dragPreview, setDragPreview] = useState<{ blockId: string; deltaCells: number } | null>(null);
 
   const boardRef = useRef<HTMLDivElement | null>(null);
@@ -35,23 +36,8 @@ export function UnblockPuzzle() {
   const board = state ?? (puzzle ? unblock.init(puzzle.payload) : null);
   const cellPx = board ? boardPx / board.size : 0;
 
-  async function submit(finalState: UnblockState, finalHintsUsed: number, finalMoveLog: UnblockMove[]) {
-    if (!puzzle) return;
-    const solved = unblock.isSolved(finalState);
-    const { activeTimeMs, pauseCount } = finish();
-    try {
-      const res = await apiFetch<AttemptResult>(`/puzzles/${puzzle.id}/attempts`, {
-        method: "POST",
-        body: JSON.stringify({ moveLog: finalMoveLog, activeTimeMs, hintsUsed: finalHintsUsed, pauseCount })
-      });
-      setResult(res);
-    } catch {
-      setResult({ solved, points: 0, breakdown: { efficiency: 0, time: 0, hintPenalty: 0, rawPoints: 0 } });
-    }
-  }
-
   function tryApplyMove(move: UnblockMove, wasHint: boolean) {
-    if (!board || result) return false;
+    if (!puzzle || !board || result) return false;
     try {
       const next = unblock.applyMove(board, move);
       const nextLog = [...moveLog, move];
@@ -59,7 +45,10 @@ export function UnblockPuzzle() {
       setMoveLog(nextLog);
       const nextHints = wasHint ? hintsUsed + 1 : hintsUsed;
       if (wasHint) setHintsUsed(nextHints);
-      if (unblock.isSolved(next)) submit(next, nextHints, nextLog);
+      if (unblock.isSolved(next)) {
+        const { activeTimeMs, pauseCount } = finish();
+        submit(puzzle.id, { moveLog: nextLog, activeTimeMs, hintsUsed: nextHints, pauseCount });
+      }
       return true;
     } catch {
       return false;
@@ -107,6 +96,7 @@ export function UnblockPuzzle() {
     );
   }
   if (result) return <PuzzleResult type="unblock" result={result} />;
+  if (submitError) return <SubmitErrorScreen message={submitError} onRetry={retry} />;
   if (!puzzle || !board) {
     return (
       <div className="app-shell flex min-h-screen items-center justify-center text-sm font-medium text-ink-2">Loading…</div>

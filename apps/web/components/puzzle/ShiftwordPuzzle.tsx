@@ -4,11 +4,12 @@ import { useRef, useState } from "react";
 import { useDrag } from "@use-gesture/react";
 import { shiftword, type ShiftwordPayload, type ShiftwordState, type ShiftwordMove } from "@brainrank/engine";
 
-import { apiFetch } from "../../lib/apiClient";
 import { useActiveTimer } from "../../lib/useActiveTimer";
 import { usePuzzleOfTheDay } from "../../lib/usePuzzleOfTheDay";
+import { useAttemptSubmit } from "../../lib/useAttemptSubmit";
 import { PuzzleFrame } from "./PuzzleFrame";
-import { PuzzleResult, type AttemptResult } from "./PuzzleResult";
+import { PuzzleResult } from "./PuzzleResult";
+import { SubmitErrorScreen } from "./SubmitErrorScreen";
 
 const DIRECTION_LOCK_PX = 10;
 const COMMIT_PX = 28;
@@ -20,35 +21,23 @@ export function ShiftwordPuzzle() {
   const [state, setState] = useState<ShiftwordState | null>(null);
   const [moveLog, setMoveLog] = useState<ShiftwordMove[]>([]);
   const [hintsUsed, setHintsUsed] = useState(0);
-  const [result, setResult] = useState<AttemptResult | null>(null);
+  const { result, error: submitError, submit, retry } = useAttemptSubmit();
   const lockedAxis = useRef<"row" | "col" | null>(null);
 
   const board = state ?? (puzzle ? shiftword.init(puzzle.payload) : null);
 
-  async function submit(finalState: ShiftwordState, finalHintsUsed: number, finalMoveLog: ShiftwordMove[]) {
-    if (!puzzle) return;
-    const solved = shiftword.isSolved(finalState);
-    const { activeTimeMs, pauseCount } = finish();
-    try {
-      const res = await apiFetch<AttemptResult>(`/puzzles/${puzzle.id}/attempts`, {
-        method: "POST",
-        body: JSON.stringify({ moveLog: finalMoveLog, activeTimeMs, hintsUsed: finalHintsUsed, pauseCount })
-      });
-      setResult(res);
-    } catch {
-      setResult({ solved, points: 0, breakdown: { efficiency: 0, time: 0, hintPenalty: 0, rawPoints: 0 } });
-    }
-  }
-
   function applyMove(move: ShiftwordMove, wasHint: boolean) {
-    if (!board || result) return;
+    if (!puzzle || !board || result) return;
     const next = shiftword.applyMove(board, move);
     const nextLog = [...moveLog, move];
     setState(next);
     setMoveLog(nextLog);
     const nextHints = wasHint ? hintsUsed + 1 : hintsUsed;
     if (wasHint) setHintsUsed(nextHints);
-    if (shiftword.isSolved(next)) submit(next, nextHints, nextLog);
+    if (shiftword.isSolved(next)) {
+      const { activeTimeMs, pauseCount } = finish();
+      submit(puzzle.id, { moveLog: nextLog, activeTimeMs, hintsUsed: nextHints, pauseCount });
+    }
   }
 
   const bind = useDrag(({ last, movement: [mx, my], event }) => {
@@ -92,6 +81,7 @@ export function ShiftwordPuzzle() {
     );
   }
   if (result) return <PuzzleResult type="shiftword" result={result} />;
+  if (submitError) return <SubmitErrorScreen message={submitError} onRetry={retry} />;
   if (!puzzle || !board) {
     return (
       <div className="app-shell flex min-h-screen items-center justify-center text-sm font-medium text-ink-2">Loading…</div>

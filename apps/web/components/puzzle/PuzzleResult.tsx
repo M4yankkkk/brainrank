@@ -1,7 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { happy, sad } from "blobatar/expression";
 import type { PuzzleId } from "../PuzzleCard";
+import { UserAvatar } from "../UserAvatar";
+import { useCurrentUser } from "../../lib/useCurrentUser";
 
 export interface AttemptResult {
   solved: boolean;
@@ -17,11 +20,22 @@ const NEXT: Record<PuzzleId, PuzzleId | null> = {
 
 export function PuzzleResult({ type, result }: { type: PuzzleId; result: AttemptResult }) {
   const router = useRouter();
+  const currentUser = useCurrentUser();
   const next = NEXT[type];
 
   return (
     <div className="app-shell flex min-h-screen flex-col items-center justify-center text-center" data-puzzle={type}>
-      <div className="mb-2 text-5xl">{result.solved ? "🎉" : "👋"}</div>
+      <div className="mb-3 flex items-center justify-center">
+        <UserAvatar
+          name={currentUser?.username || "player"}
+          src={currentUser?.avatarUrl}
+          size={80}
+          animate="always"
+          interactiveGaze={true}
+          expression={result.solved ? happy : sad}
+          background="squircle"
+        />
+      </div>
       <h1 className="mb-1 font-display text-3xl font-extrabold tracking-tight">
         {result.solved ? `${result.points} points` : "Attempt recorded"}
       </h1>

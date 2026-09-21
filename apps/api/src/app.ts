@@ -6,6 +6,7 @@ import { jsonSchemaTransform, serializerCompiler, validatorCompiler, type ZodTyp
 
 import { env } from "./env.js";
 import authPlugin from "./plugins/auth.js";
+import authRoutes from "./routes/auth.js";
 import puzzlesRoutes from "./routes/puzzles.js";
 import attemptsRoutes from "./routes/attempts.js";
 import groupsRoutes from "./routes/groups.js";
@@ -47,6 +48,7 @@ export function buildApp() {
 
   app.get("/health", { schema: { tags: ["meta"] } }, async () => ({ ok: true }));
 
+  app.register(authRoutes);
   app.register(puzzlesRoutes);
   app.register(attemptsRoutes);
   app.register(groupsRoutes);
