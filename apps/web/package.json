@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "pnpm -r --filter=./packages/* build",
+    "prebuild": "pnpm --filter @brainrank/tokens build && pnpm --filter @brainrank/engine build",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

@@ -1,5 +1,7 @@
 node_modules/
 dist/
+!packages/tokens/dist/
+!packages/tokens/dist/tokens.css
 .next/
 .turbo/
 *.tsbuildinfo
