@@ -37,20 +37,38 @@ jobs:
             local endpoint="$1"
             local name="$2"
             echo "Pinging $name ($endpoint)..."
-            
-            local response
-            response=$(curl -sS -w "\nHTTP_STATUS:%{http_code}" -X POST "$CLEAN_API_URL$endpoint" \
-              -H "x-cron-secret: $CLEAN_CRON_SECRET" \
-              -H "content-type: application/json" \
-              -d '{}' \
-              --max-time 60)
-            
-            local http_code
-            http_code=$(echo "$response" | grep "HTTP_STATUS:" | cut -d: -f2)
-            local body
-            body=$(echo "$response" | grep -v "HTTP_STATUS:")
 
-            echo "Response (HTTP $http_code): $body"
+            local max_attempts=3
+            local attempt=1
+            local response
+            local http_code
+            local body
+
+            while [ "$attempt" -le "$max_attempts" ]; do
+              response=$(curl -sS -w "\nHTTP_STATUS:%{http_code}" -X POST "$CLEAN_API_URL$endpoint" \
+                -H "x-cron-secret: $CLEAN_CRON_SECRET" \
+                -H "content-type: application/json" \
+                -d '{}' \
+                --max-time 60)
+
+              http_code=$(echo "$response" | grep "HTTP_STATUS:" | cut -d: -f2)
+              body=$(echo "$response" | grep -v "HTTP_STATUS:")
+
+              echo "Response (attempt $attempt/$max_attempts, HTTP $http_code): $body"
+
+              if [ "$http_code" -ge 200 ] && [ "$http_code" -lt 300 ]; then
+                return 0
+              fi
+
+              if [ "$http_code" -ge 500 ] && [ "$http_code" -lt 600 ] && [ "$attempt" -lt "$max_attempts" ]; then
+                echo "::notice::$name returned HTTP $http_code. Retrying in 10 seconds..."
+                sleep 10
+                attempt=$((attempt + 1))
+                continue
+              fi
+
+              break
+            done
 
             if [ "$http_code" -lt 200 ] || [ "$http_code" -ge 300 ]; then
               echo "::error::$name failed with HTTP $http_code: $body"
