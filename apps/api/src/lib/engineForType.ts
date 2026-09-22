@@ -1,14 +1,16 @@
-import { engines, type EnginePuzzleId } from "@brainrank/engine";
+import { engines } from "@brainrank/engine";
 import { moveSchemasByType } from "../schemas/puzzles.js";
 
-export function isKnownPuzzleType(type: string): type is EnginePuzzleId {
-  return type in engines;
+export type SupportedPuzzleType = keyof typeof moveSchemasByType;
+
+export function isKnownPuzzleType(type: string): type is SupportedPuzzleType {
+  return type in moveSchemasByType && type in engines;
 }
 
-export function engineFor(type: EnginePuzzleId) {
+export function engineFor(type: SupportedPuzzleType) {
   return engines[type];
 }
 
-export function moveSchemaFor(type: EnginePuzzleId) {
+export function moveSchemaFor(type: SupportedPuzzleType) {
   return moveSchemasByType[type];
 }

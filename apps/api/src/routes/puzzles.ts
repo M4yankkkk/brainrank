@@ -1,9 +1,10 @@
 import type { FastifyPluginAsync } from "fastify";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import { z } from "zod";
 
 import { db } from "../db/client.js";
 import { attempts, dailySets, puzzles } from "../db/schema.js";
+import { generateDailyPuzzlesForDate } from "../generators/puzzleGenerator.js";
 
 const querySchema = z.object({
   // Each player's "today" is their own local date (PRD 13.5), so the client sends it explicitly.
@@ -28,13 +29,60 @@ const puzzlesRoutes: FastifyPluginAsync = async (app) => {
       const { date } = querySchema.parse(request.query);
       const localDate = date ?? new Date().toISOString().slice(0, 10);
 
-      const [dailySet] = await db.select().from(dailySets).where(eq(dailySets.date, localDate)).limit(1);
+      let [dailySet] = await db.select().from(dailySets).where(eq(dailySets.date, localDate)).limit(1);
+      if (!dailySet) {
+        // Auto-generate fresh daily set on demand if not pre-seeded so app never 404s
+        const generated = generateDailyPuzzlesForDate(localDate);
+        const insertedPuzzles: Array<{ id: string }> = [];
+        for (const p of generated) {
+          const [row] = await db
+            .insert(puzzles)
+            .values(p)
+            .onConflictDoUpdate({
+              target: [puzzles.type, puzzles.releaseDate],
+              set: {
+                difficulty: sql`excluded.difficulty`,
+                payload: sql`excluded.payload`,
+                par: sql`excluded.par`,
+                tFastMs: sql`excluded.t_fast_ms`,
+                tSlowMs: sql`excluded.t_slow_ms`,
+                weights: sql`excluded.weights`
+              }
+            })
+            .returning({ id: puzzles.id });
+          insertedPuzzles.push(row);
+        }
+        const puzzleIds = insertedPuzzles.map((p) => p.id);
+
+        const [newDailySet] = await db
+          .insert(dailySets)
+          .values({
+            date: localDate,
+            puzzleIds,
+            bonusPuzzleId: null
+          })
+          .onConflictDoUpdate({
+            target: [dailySets.date],
+            set: {
+              puzzleIds,
+              bonusPuzzleId: null
+            }
+          })
+          .returning();
+
+        dailySet = newDailySet ?? (await db.select().from(dailySets).where(eq(dailySets.date, localDate)).limit(1))[0];
+      }
+
       if (!dailySet) {
         return reply.code(404).send({ error: `No daily set published for ${localDate}` });
       }
 
       const puzzleIds = dailySet.bonusPuzzleId ? [...dailySet.puzzleIds, dailySet.bonusPuzzleId] : dailySet.puzzleIds;
       const puzzleRows = await db.select().from(puzzles).where(inArray(puzzles.id, puzzleIds));
+
+      // Ensure puzzles are returned in the exact dailySet order: Starfield, Shiftword, Unblock
+      const orderMap = new Map(puzzleIds.map((id, index) => [id, index]));
+      puzzleRows.sort((a, b) => (orderMap.get(a.id) ?? 0) - (orderMap.get(b.id) ?? 0));
 
       const attemptRows = await db
         .select()
@@ -53,7 +101,7 @@ const puzzlesRoutes: FastifyPluginAsync = async (app) => {
           tFastMs: p.tFastMs,
           tSlowMs: p.tSlowMs,
           weights: p.weights,
-          isBonus: p.id === dailySet.bonusPuzzleId,
+          isBonus: p.id === dailySet!.bonusPuzzleId,
           attempt: attemptToSummary(attemptByPuzzle.get(p.id))
         }))
       };
