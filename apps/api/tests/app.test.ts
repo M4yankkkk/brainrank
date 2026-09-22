@@ -66,6 +66,14 @@ describe("app", () => {
     expect(res.statusCode).toBe(401);
   });
 
+  it("handles duplicate and trailing slashes in route paths", async () => {
+    const resTrailing = await app.inject({ method: "GET", url: "/health/" });
+    expect(resTrailing.statusCode).toBe(200);
+
+    const resDuplicate = await app.inject({ method: "GET", url: "//health" });
+    expect(resDuplicate.statusCode).toBe(200);
+  });
+
   it("serves the OpenAPI document", async () => {
     const res = await app.inject({ method: "GET", url: "/docs/json" });
     expect(res.statusCode).toBe(200);

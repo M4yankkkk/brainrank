@@ -18,18 +18,52 @@ jobs:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
           if [ -z "$API_URL" ] || [ -z "$CRON_SECRET" ]; then
-            echo "API_URL or CRON_SECRET secrets are missing. Configure them in Repository Settings -> Secrets and variables -> Actions."
+            echo "::error::API_URL or CRON_SECRET secrets are missing. Configure them in Repository Settings -> Secrets and variables -> Actions."
             exit 1
           fi
 
-          echo "Pinging daily rollover..."
-          curl -sf -X POST "$API_URL/internal/cron/daily-rollover" \
-            -H "x-cron-secret: $CRON_SECRET" \
-            -H "content-type: application/json" \
-            -d '{}'
+          # Strip surrounding whitespace and trailing slashes
+          CLEAN_API_URL="$(echo "$API_URL" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's:/*$::')"
+          CLEAN_CRON_SECRET="$(echo "$CRON_SECRET" | tr -d '\r\n"' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 
-          echo "Pinging season end..."
-          curl -sf -X POST "$API_URL/internal/cron/season-end" \
-            -H "x-cron-secret: $CRON_SECRET" \
-            -H "content-type: application/json" \
-            -d '{}'
+          echo "Target API: $CLEAN_API_URL"
+
+          # 1. Warm up Render free tier instance if it was asleep
+          echo "Waking up API if asleep (handling Render cold start)..."
+          curl -sS --retry 3 --retry-delay 5 --retry-all-errors --max-time 60 "$CLEAN_API_URL/health" || true
+          echo ""
+
+          call_cron() {
+            local endpoint="$1"
+            local name="$2"
+            echo "Pinging $name ($endpoint)..."
+            
+            local response
+            response=$(curl -sS -w "\nHTTP_STATUS:%{http_code}" -X POST "$CLEAN_API_URL$endpoint" \
+              -H "x-cron-secret: $CLEAN_CRON_SECRET" \
+              -H "content-type: application/json" \
+              -d '{}' \
+              --max-time 60)
+            
+            local http_code
+            http_code=$(echo "$response" | grep "HTTP_STATUS:" | cut -d: -f2)
+            local body
+            body=$(echo "$response" | grep -v "HTTP_STATUS:")
+
+            echo "Response (HTTP $http_code): $body"
+
+            if [ "$http_code" -lt 200 ] || [ "$http_code" -ge 300 ]; then
+              echo "::error::$name failed with HTTP $http_code: $body"
+              if [ "$http_code" -eq 401 ]; then
+                echo "::notice::Check that CRON_SECRET in GitHub Actions Secrets matches the CRON_SECRET environment variable on your deployed API."
+              elif [ "$http_code" -eq 404 ]; then
+                echo "::notice::Check that API_URL in GitHub Actions Secrets points to the root of your deployed API (e.g. https://brainrank-api.onrender.com) without subpaths."
+              fi
+              exit 1
+            fi
+          }
+
+          call_cron "/internal/cron/daily-rollover" "Daily Rollover"
+          call_cron "/internal/cron/season-end" "Season End"
+
+          echo "All daily cron tasks completed successfully!"
